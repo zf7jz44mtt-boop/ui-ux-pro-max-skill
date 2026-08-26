@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De La Isla — Digital Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181A;
+    --cream:#EFE8D8;
+    --brass:#B4915A;
+    --teal:#1E3A34;
+    --paper:#F6F1E6;
+    --line: rgba(239,232,216,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--brass); color:var(--ink); }
+
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .display{ font-family:'Fraunces', serif; }
+
+  /* NAV */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 48px;
+    background:linear-gradient(to bottom, rgba(20,24,26,0.92), rgba(20,24,26,0));
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:600; letter-spacing:0.02em;
+    font-size:19px;
+  }
+  .logo span{ color:var(--brass); }
+  .nav-links{ display:flex; gap:36px; list-style:none; }
+  .nav-links a{
+    color:var(--cream); text-decoration:none; font-size:13px;
+    letter-spacing:0.08em; text-transform:uppercase; opacity:0.75;
+    transition:opacity 0.25s;
+  }
+  .nav-links a:hover{ opacity:1; }
+
+  /* SERVICES DROPDOWN — minimalist, CSS-only */
+  .nav-dropdown{ position:relative; }
+  .nav-dropdown > span{
+    display:flex; align-items:center; gap:5px; cursor:default;
+    color:var(--cream); font-size:13px; letter-spacing:0.08em; text-transform:uppercase;
+    opacity:0.75; transition:opacity 0.25s;
+  }
+  .nav-dropdown:hover > span, .nav-dropdown:focus-within > span{ opacity:1; }
+  .nav-dropdown .caret{ font-size:9px; transition:transform 0.25s; }
+  .nav-dropdown:hover .caret, .nav-dropdown:focus-within .caret{ transform:rotate(180deg); }
+  .dropdown-menu{
+    position:absolute; top:100%; left:50%; transform:translateX(-50%) translateY(6px);
+    background:var(--ink); border:1px solid var(--line); min-width:230px;
+    padding:6px 0; opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+    z-index:60; border-radius:2px;
+  }
+  .nav-dropdown:hover .dropdown-menu, .nav-dropdown:focus-within .dropdown-menu{
+    opacity:1; visibility:visible; pointer-events:auto; transform:translateX(-50%) translateY(0);
+  }
+  .dropdown-menu a{
+    display:block; padding:11px 22px; font-size:12.5px; letter-spacing:0.02em;
+    text-transform:none; color:rgba(239,232,216,0.7); text-decoration:none;
+    transition:color 0.2s, background 0.2s;
+  }
+  .dropdown-menu a:hover{ color:var(--brass); background:rgba(180,145,90,0.08); }
+  .cart-btn{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); padding:9px 18px;
+    border-radius:2px; font-size:12px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--cream); text-decoration:none;
+    transition:border-color 0.25s, color 0.25s;
+  }
+  .cart-btn:hover{ border-color:var(--brass); color:var(--brass); }
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:160px 24px 100px;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--brass); margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:clamp(40px, 6.2vw, 84px);
+    font-weight:450; line-height:1.02; max-width:1000px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{ font-style:italic; color:var(--brass); font-weight:300; }
+  .hero p.sub{
+    margin-top:26px; max-width:560px; font-size:17px; line-height:1.6;
+    color:rgba(239,232,216,0.7); font-weight:400;
+  }
+  .hero-ctas{ margin-top:44px; display:flex; gap:16px; align-items:center; }
+  .btn-primary{
+    background:var(--brass); color:var(--ink); text-decoration:none;
+    padding:15px 30px; font-size:13px; letter-spacing:0.06em; text-transform:uppercase;
+    font-weight:600; border-radius:2px; transition:transform 0.25s, background 0.25s;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); background:#c8a06a; }
+  .btn-ghost{
+    color:var(--cream); text-decoration:none; font-size:13px; letter-spacing:0.06em;
+    text-transform:uppercase; border-bottom:1px solid var(--line); padding-bottom:4px;
+    transition:border-color 0.25s;
+  }
+  .btn-ghost:hover{ border-color:var(--brass); }
+
+  /* THE LABEL — hero signature product */
+  .label-wrap{
+    margin-top:74px; perspective:1200px;
+  }
+  .label{
+    width:300px; height:380px;
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:4px;
+    padding:26px 24px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6);
+    transform-style:preserve-3d;
+    transition:transform 0.15s ease-out;
+    border:1px solid rgba(20,24,26,0.08);
+  }
+  .label-top{ text-align:left; }
+  .label-top .brand{ font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--teal); font-weight:500;}
+  .label-top .name{ font-family:'Fraunces', serif; font-size:26px; margin-top:8px; line-height:1.05; font-weight:600;}
+  .label-facts{
+    border-top:2px solid var(--ink); border-bottom:1px solid var(--ink);
+    padding:10px 0; text-align:left;
+  }
+  .label-facts .title{ font-size:11px; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; margin-bottom:6px;}
+  .fact-row{
+    display:flex; justify-content:space-between; font-size:11px;
+    padding:3px 0; border-top:1px solid rgba(20,24,26,0.12);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .fact-row:first-of-type{ border-top:none; }
+  .label-bottom{ display:flex; justify-content:space-between; align-items:flex-end; }
+  .barcode{ display:flex; gap:2px; align-items:flex-end; height:30px; }
+  .barcode div{ width:2px; background:var(--ink); }
+  .price{ font-family:'IBM Plex Mono', monospace; font-size:19px; font-weight:500; }
+
+  /* LOGO MARQUEE — social proof, inspired by reference site */
+  .marquee-wrap{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:28px 0; overflow:hidden; position:relative;
+  }
+  .marquee-label{
+    text-align:center; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:rgba(239,232,216,0.58); margin-bottom:20px;
+  }
+  .marquee-track{
+    display:flex; gap:64px; white-space:nowrap;
+    animation:scroll-left 28s linear infinite;
+    width:max-content;
+  }
+  .marquee-track span{
+    font-family:'Fraunces', serif; font-size:20px; color:rgba(239,232,216,0.35);
+    letter-spacing:0.02em;
+  }
+  @keyframes scroll-left{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* PRINCIPLES GRID */
+  .principles{ display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .principle{ background:var(--ink); padding:32px 26px; }
+  .principle .pnum{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--brass); margin-bottom:16px; }
+  .principle h4{ font-family:'Fraunces', serif; font-size:19px; font-weight:600; margin-bottom:10px; }
+  .principle p{ font-size:13px; line-height:1.55; color:rgba(239,232,216,0.65); }
+
+  /* SECTION SHELL */
+  section{ padding:130px 48px; max-width:1240px; margin:0 auto; }
+  .section-head{ margin-bottom:64px; }
+  .section-head .eyebrow{ margin-bottom:16px; }
+  .section-head h2{
+    font-family:'Fraunces', serif; font-weight:450;
+    font-size:clamp(30px, 3.4vw, 46px); max-width:640px; line-height:1.1;
+  }
+
+  /* SERVICES ACCORDION — inspired by reference site, styled as a menu de mercado */
+  .menu-list{ border-top:1px solid var(--line); }
+  .menu-item{ border-bottom:1px solid var(--line); }
+  .menu-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:30px 4px; cursor:pointer; gap:24px;
+  }
+  .menu-head .mh-left{ display:flex; align-items:baseline; gap:20px; }
+  .menu-head .sku{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--brass); letter-spacing:0.08em; }
+  .menu-head h3{ font-family:'Fraunces', serif; font-size:clamp(22px, 2.6vw, 32px); font-weight:500; }
+  .menu-toggle{
+    font-family:'IBM Plex Mono', monospace; font-size:20px; color:var(--brass);
+    transition:transform 0.3s; flex-shrink:0;
+  }
+  .menu-item.open .menu-toggle{ transform:rotate(45deg); }
+  .menu-body{
+    max-height:0; overflow:hidden; transition:max-height 0.4s ease;
+  }
+  .menu-item.open .menu-body{ max-height:280px; }
+  .menu-body-inner{
+    padding:0 4px 34px; display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap;
+  }
+  .menu-body-inner .desc{ font-size:15px; line-height:1.6; color:rgba(239,232,216,0.7); max-width:420px; }
+  .menu-ingredients{ min-width:220px; }
+  .menu-ingredients .title{ font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--brass); margin-bottom:8px; }
+  .menu-ingredients .list{ font-family:'IBM Plex Mono', monospace; font-size:12px; line-height:1.9; color:rgba(239,232,216,0.65); }
+  .menu-price{ font-family:'IBM Plex Mono', monospace; font-size:16px; color:var(--cream); white-space:nowrap; }
+
+  /* CASE STUDIES — inspired by reference site */
+  .cases{ display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .case-card{
+    background:var(--paper); color:var(--ink); border-radius:4px; padding:30px 26px;
+    display:flex; flex-direction:column; gap:20px; text-decoration:none;
+    transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .case-card:hover{ transform:translateY(-4px); box-shadow:0 30px 60px -20px rgba(0,0,0,0.5); }
+  .case-card .tag{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--teal); }
+  .case-card h4{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; }
+  .case-card .cdesc{ font-size:13px; color:rgba(20,24,26,0.65); line-height:1.5; }
+  .case-stats{ display:flex; gap:24px; border-top:1px solid rgba(20,24,26,0.12); padding-top:16px; margin-top:auto; }
+  .case-stats .cs{ display:flex; flex-direction:column; }
+  .case-stats .cs .val{ font-family:'Fraunces', serif; font-size:26px; color:var(--teal); font-weight:600; }
+  .case-stats .cs .lbl{ font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:rgba(20,24,26,0.55); margin-top:2px; }
+
+  /* AISLE / SERVICES GRID */
+  .aisle{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;
+  }
+  .product{
+    background:var(--paper); color:var(--ink); border-radius:4px;
+    padding:24px; display:flex; flex-direction:column; gap:14px;
+    transform-style:preserve-3d; transition:transform 0.15s ease-out, box-shadow 0.25s;
+    cursor:default;
+  }
+  .product:hover{ box-shadow:0 30px 60px -20px rgba(0,0,0,0.5); }
+  .product .sku{ font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.1em; color:var(--teal); text-transform:uppercase;}
+  .product h3{ font-family:'Fraunces', serif; font-size:22px; font-weight:600; line-height:1.15;}
+  .product .desc{ font-size:13.5px; line-height:1.55; color:rgba(20,24,26,0.7); }
+  .ingredients{
+    border-top:1.5px solid var(--ink); padding-top:10px; margin-top:auto;
+  }
+  .ingredients .title{ font-size:10px; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; margin-bottom:6px;}
+  .ingredients .list{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:rgba(20,24,26,0.75); line-height:1.6;}
+  .product-footer{ display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(20,24,26,0.12); padding-top:12px; }
+  .mini-barcode{ display:flex; gap:1.5px; align-items:flex-end; height:20px;}
+  .mini-barcode div{ width:1.5px; background:var(--ink); }
+  .product .price{ font-size:15px; }
+
+  /* WHY */
+  .why{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:80px; align-items:start; }
+  .why-copy p{ font-size:18px; line-height:1.7; color:rgba(239,232,216,0.78); font-weight:400; }
+  .why-copy p + p{ margin-top:20px; }
+  .stats{ display:flex; flex-direction:column; gap:28px; }
+  .stat{ border-top:1px solid var(--line); padding-top:18px; }
+  .stat .num{ font-family:'Fraunces', serif; font-size:44px; color:var(--brass); font-weight:450; }
+  .stat .lbl{ font-size:12px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.6; margin-top:4px; }
+
+  /* RECEIPT / CART SECTION — signature closer */
+  .receipt-section{ background:var(--paper); color:var(--ink); }
+  .receipt{
+    max-width:420px; margin:0 auto; background:#fff;
+    border:1px dashed rgba(20,24,26,0.35);
+    padding:36px 30px; font-family:'IBM Plex Mono', monospace;
+    box-shadow: 0 30px 70px -30px rgba(20,24,26,0.35);
+  }
+  .receipt h4{ text-align:center; font-size:14px; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:4px;}
+  .receipt .sub{ text-align:center; font-size:10px; opacity:0.6; margin-bottom:20px;}
+  .receipt-line{ display:flex; justify-content:space-between; font-size:12.5px; padding:6px 0; }
+  .receipt hr{ border:none; border-top:1px dashed rgba(20,24,26,0.35); margin:14px 0; }
+  .receipt .total{ font-size:15px; font-weight:600; }
+  .receipt .thanks{ text-align:center; font-size:11px; margin-top:22px; opacity:0.7; }
+  .receipt .rbarcode{ display:flex; justify-content:center; gap:2px; margin-top:20px; height:36px; align-items:flex-end;}
+  .receipt .rbarcode div{ width:2px; background:var(--ink); }
+
+  /* CONSULTATION MODAL — form that posts to Discord webhook */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,24,26,0.75);
+    backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center;
+    z-index:100; padding:24px;
+  }
+  .modal-overlay.active{ display:flex; }
+  .modal-box{
+    background:var(--paper); color:var(--ink); width:100%; max-width:440px;
+    border-radius:4px; padding:36px 32px; position:relative;
+    box-shadow:0 60px 100px -30px rgba(0,0,0,0.6);
+    font-family:'IBM Plex Mono', monospace;
+    max-height:90vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:18px; right:20px; background:none; border:none;
+    font-size:20px; cursor:pointer; color:var(--ink); opacity:0.5; line-height:1;
+  }
+  .modal-close:hover{ opacity:1; }
+  .modal-box h4{ font-family:'Fraunces', serif; font-size:22px; font-weight:600; margin-bottom:4px; }
+  .modal-box .msub{ font-size:11px; opacity:0.6; margin-bottom:24px; }
+  .modal-box label{ display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; margin-top:16px; }
+  .modal-box label:first-of-type{ margin-top:0; }
+  .modal-box input, .modal-box textarea{
+    width:100%; border:1px solid rgba(20,24,26,0.25); background:#fff;
+    padding:11px 12px; font-family:'IBM Plex Mono', monospace; font-size:13px;
+    border-radius:2px; color:var(--ink);
+  }
+  .modal-box input:focus, .modal-box textarea:focus{ outline:2px solid var(--brass); border-color:var(--brass); }
+  .modal-box textarea{ resize:vertical; min-height:70px; }
+  .modal-submit{
+    width:100%; margin-top:24px; background:var(--teal); color:var(--paper);
+    border:none; padding:14px; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    font-weight:600; border-radius:2px; cursor:pointer; transition:background 0.2s;
+  }
+  .modal-submit:hover{ background:#274a42; }
+  .modal-submit:disabled{ opacity:0.6; cursor:not-allowed; }
+  .modal-status{ font-size:11px; margin-top:12px; text-align:center; min-height:14px; }
+  .modal-status.ok{ color:var(--teal); }
+  .modal-status.err{ color:#a3453a; }
+
+  .section-head.dark-on-paper h2, .section-head.dark-on-paper .eyebrow{ color:var(--ink); }
+  .receipt-section .eyebrow{ color:var(--teal); }
+  .receipt-cta{ text-align:center; margin-top:40px; }
+  .receipt-cta .btn-primary{ background:var(--teal); color:var(--paper); }
+  .receipt-cta .btn-primary:hover{ background:#274a42; }
+
+  footer{
+    padding:70px 48px 40px; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px;
+  }
+  footer .fcol h5{ font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--brass); margin-bottom:16px; font-weight:600; }
+  footer .fcol p{ font-size:13px; color:rgba(239,232,216,0.6); line-height:1.6; max-width:280px; }
+  footer .fcol ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+  footer .fcol a{ color:rgba(239,232,216,0.65); text-decoration:none; font-size:13px; transition:color 0.2s; }
+  footer .fcol a:hover{ color:var(--brass); }
+  .footer-bottom{
+    grid-column:1/-1; border-top:1px solid var(--line); margin-top:30px; padding-top:22px;
+    display:flex; justify-content:space-between; font-size:11px; color:rgba(239,232,216,0.55);
+  }
+  @media(max-width:900px){
+    footer{ grid-template-columns:1fr; }
+    .footer-bottom{ flex-direction:column; gap:10px; }
+  }
+
+  /* MOBILE NAV TOGGLE */
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:36px; height:36px; background:none; border:none; cursor:pointer; padding:0; flex-shrink:0;
+  }
+  .nav-toggle span{ width:100%; height:2px; background:var(--cream); display:block; transition:transform 0.25s, opacity 0.25s; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  /* FOCUS VISIBILITY (keyboard navigation) */
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
+    outline:2px solid var(--brass); outline-offset:3px; border-radius:2px;
+  }
+
+  @media(max-width:900px){
+    nav{ padding:20px 22px; }
+    .nav-toggle{ display:flex; }
+    .nav-links{
+      display:none; position:fixed; inset:0; z-index:55;
+      flex-direction:column; align-items:center; justify-content:center; gap:30px;
+      background:var(--ink);
+    }
+    .nav-links.open{ display:flex; }
+    .nav-links a{ font-size:16px; }
+    .nav-dropdown{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+    .nav-dropdown > span{ font-size:16px; opacity:1; }
+    .nav-dropdown .dropdown-menu{
+      position:static; transform:none; opacity:1; visibility:visible; pointer-events:auto;
+      background:none; border:none; padding:0;
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .nav-dropdown .dropdown-menu a{ text-transform:uppercase; letter-spacing:0.08em; font-size:14px; padding:0; }
+    section{ padding:90px 22px; }
+    .why{ grid-template-columns:1fr; gap:48px; }
+    .principles{ grid-template-columns:1fr 1fr; }
+    .cases{ grid-template-columns:1fr; }
+    .menu-body-inner{ flex-direction:column; gap:14px; }
+  }
+
+  /* Respect the user's OS-level motion preference */
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" style="display:flex; flex-direction:column; line-height:1.1; text-decoration:none;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li class="nav-dropdown" tabindex="0">
+      <span>Servicios <span class="caret">▾</span></span>
+      <div class="dropdown-menu">
+        <a href="paid-media.html">Paid Media</a>
+        <a href="contenido-redes.html">Contenido &amp; Redes</a>
+        <a href="seo-web.html">SEO &amp; Web</a>
+        <a href="estrategia-marca.html">Estrategia de Marca</a>
+        <a href="analitica-data.html">Analítica &amp; Data</a>
+        <a href="email-crm.html">Email &amp; CRM</a>
+      </div>
+    </li>
+    <li><a href="#why">Nosotros</a></li>
+    <li><a href="#receipt">Contacto</a></li>
+  </ul>
+  <a href="#receipt" class="cart-btn">🛒 Mi carrito</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow mono">Marketing para negocios que van en serio</div>
+  <h1 class="display">Tu negocio merece verse <em>caro</em>,<br>aunque tu presupuesto no lo sea.</h1>
+  <p class="sub">De La Isla Digital Solutions empaca estrategia, contenido y datos en resultados que un negocio pequeño puede pagar y un cliente grande puede notar. Nada de relleno. Solo lo que mueve la aguja.</p>
+  <div class="hero-ctas">
+    <a href="#aisle" class="btn-primary">Ver qué llevarme</a>
+    <a href="#receipt" class="btn-ghost">Armar mi paquete →</a>
+  </div>
+
+  <div class="label-wrap">
+    <div class="label" id="heroLabel">
+      <div class="label-top">
+        <div class="brand mono">De La Isla · Ed. Limitada</div>
+        <div class="name">Transformación<br>Digital</div>
+      </div>
+      <div class="label-facts">
+        <div class="title">Información del producto</div>
+        <div class="fact-row"><span>Estrategia</span><span>100%</span></div>
+        <div class="fact-row"><span>Creatividad</span><span>100%</span></div>
+        <div class="fact-row"><span>Datos reales</span><span>100%</span></div>
+        <div class="fact-row"><span>Relleno / jerga</span><span>0%</span></div>
+      </div>
+      <div class="label-bottom">
+        <div class="barcode" id="heroBarcode"></div>
+        <div class="price">Cotizar →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-label mono">Negocios que ya empacaron su crecimiento con nosotros</div>
+  <div class="marquee-track">
+    <span>Panadería Sol</span><span>·</span><span>Estudio Verde</span><span>·</span><span>Café Maré</span><span>·</span><span>Taller Roble</span><span>·</span><span>Clínica Vida</span><span>·</span><span>Boutique Nena</span><span>·</span>
+    <span>Panadería Sol</span><span>·</span><span>Estudio Verde</span><span>·</span><span>Café Maré</span><span>·</span><span>Taller Roble</span><span>·</span><span>Clínica Vida</span><span>·</span><span>Boutique Nena</span><span>·</span>
+  </div>
+</div>
+
+<section id="principios">
+  <div class="section-head">
+    <div class="eyebrow mono">Cómo trabajamos</div>
+    <h2>Cuatro reglas que seguimos en cada etiqueta que diseñamos para ti.</h2>
+  </div>
+  <div class="principles">
+    <div class="principle">
+      <div class="pnum">01</div>
+      <h4>Tu negocio, primero</h4>
+      <p>Trabajamos como una extensión de tu equipo, no como un proveedor externo más.</p>
+    </div>
+    <div class="principle">
+      <div class="pnum">02</div>
+      <h4>Creatividad con propósito</h4>
+      <p>Cada idea tiene que funcionar en el canal real, no solo verse bien en una presentación.</p>
+    </div>
+    <div class="principle">
+      <div class="pnum">03</div>
+      <h4>Decisiones con datos</h4>
+      <p>Lo que se mide con rigor, se mejora con precisión. Nada a ciegas.</p>
+    </div>
+    <div class="principle">
+      <div class="pnum">04</div>
+      <h4>Precios sin sorpresas</h4>
+      <p>Como en el súper: ves el precio antes de llevarlo. Sin letra pequeña.</p>
+    </div>
+  </div>
+</section>
+
+<section id="aisle">
+  <div class="section-head">
+    <div class="eyebrow mono">Pasillo 01 — Nuestros servicios</div>
+    <h2>Sin paquetes gigantes ni contratos eternos: lleva solo lo que tu negocio necesita hoy.</h2>
+  </div>
+  <div class="menu-list" id="menuList">
+
+    <div class="menu-item open">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="true" aria-controls="menu-body-1">
+        <div class="mh-left"><span class="sku mono">DLI-001</span><h3>Paid Media</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-1">
+        <div class="menu-body-inner">
+          <p class="desc">Campañas pagas que se optimizan solas cada semana, no cada trimestre.</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Meta Ads · Google Ads · TikTok Ads · Reportes semanales</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="paid-media.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="false" aria-controls="menu-body-2">
+        <div class="mh-left"><span class="sku mono">DLI-002</span><h3>Contenido &amp; Redes</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-2">
+        <div class="menu-body-inner">
+          <p class="desc">Contenido que detiene el scroll y construye comunidad real, no solo likes.</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Guion · Producción · Calendario · Comunidad</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="contenido-redes.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="false" aria-controls="menu-body-3">
+        <div class="mh-left"><span class="sku mono">DLI-003</span><h3>SEO &amp; Web</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-3">
+        <div class="menu-body-inner">
+          <p class="desc">Sitios construidos para posicionar primero y convertir después.</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Auditoría · Arquitectura · Contenido SEO · Velocidad</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="seo-web.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="false" aria-controls="menu-body-4">
+        <div class="mh-left"><span class="sku mono">DLI-004</span><h3>Estrategia de Marca</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-4">
+        <div class="menu-body-inner">
+          <p class="desc">Posicionamiento y mensaje que hacen que tu marca sea imposible de confundir.</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Investigación · Posicionamiento · Voz de marca</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="estrategia-marca.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="false" aria-controls="menu-body-5">
+        <div class="mh-left"><span class="sku mono">DLI-005</span><h3>Analítica &amp; Data</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-5">
+        <div class="menu-body-inner">
+          <p class="desc">Dashboards claros que responden una sola pregunta: ¿esto está funcionando?</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Tracking · Dashboards · Revisión mensual</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="analitica-data.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-head" role="button" tabindex="0" aria-expanded="false" aria-controls="menu-body-6">
+        <div class="mh-left"><span class="sku mono">DLI-006</span><h3>Email &amp; CRM</h3></div>
+        <div class="menu-toggle">+</div>
+      </div>
+      <div class="menu-body" id="menu-body-6">
+        <div class="menu-body-inner">
+          <p class="desc">Automatizaciones que venden mientras tú atiendes tu negocio.</p>
+          <div class="menu-ingredients">
+            <div class="title">Ingredientes</div>
+            <div class="list">Flujos · Segmentación · Copy · Pruebas A/B</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;"><div class="menu-price">Desde $$$</div><a href="email-crm.html" class="btn-ghost" style="white-space:nowrap;">Ver más detalles →</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="why">
+  <div class="section-head">
+    <div class="eyebrow mono">Por qué De La Isla</div>
+    <h2>Trabajamos como si tu negocio fuera el único cliente que tenemos.</h2>
+  </div>
+  <div class="why">
+    <div class="why-copy">
+      <p>Sabemos que no tienes presupuesto para experimentar ni tiempo para agencias que hablan en jerga. Por eso te mostramos exactamente qué estás comprando: qué incluye, cuánto cuesta y qué puedes esperar. Sin letra pequeña.</p>
+      <p>Esa misma claridad es la que aplicamos a tus campañas: si un resultado no se puede medir, no lo lanzamos. Si un mensaje no se entiende en tres segundos, lo reescribimos. Tu negocio no necesita más ruido, necesita que le funcione.</p>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num display">3.5x</div>
+        <div class="lbl mono">ROAS promedio en cuentas activas</div>
+      </div>
+      <div class="stat">
+        <div class="num display">120+</div>
+        <div class="lbl mono">Campañas empacadas y entregadas</div>
+      </div>
+      <div class="stat">
+        <div class="num display">92%</div>
+        <div class="lbl mono">De clientes que repiten compra</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="casos">
+  <div class="section-head">
+    <div class="eyebrow mono">Casos</div>
+    <h2>Crecimiento que se mide en ventas, no en likes.</h2>
+  </div>
+  <div class="cases">
+    <div class="case-card">
+      <div class="tag mono">Café Maré · Retail</div>
+      <h4>De cafetería de barrio a marca con lista de espera</h4>
+      <p class="cdesc">Contenido + Paid Media enfocado en horas valle.</p>
+      <div class="case-stats">
+        <div class="cs"><span class="val">+68%</span><span class="lbl mono">Ventas horas valle</span></div>
+        <div class="cs"><span class="val">−22%</span><span class="lbl mono">Costo por cliente</span></div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="tag mono">Taller Roble · Servicios</div>
+      <h4>De boca en boca a agenda llena 3 semanas seguidas</h4>
+      <p class="cdesc">SEO local + Web nueva orientada a cotizaciones.</p>
+      <div class="case-stats">
+        <div class="cs"><span class="val">+140%</span><span class="lbl mono">Leads calificados</span></div>
+        <div class="cs"><span class="val">Top 3</span><span class="lbl mono">En Google local</span></div>
+      </div>
+    </div>
+    <div class="case-card">
+      <div class="tag mono">Boutique Nena · E-commerce</div>
+      <h4>Un catálogo pequeño compitiendo con marcas grandes</h4>
+      <p class="cdesc">Estrategia de marca + Email &amp; CRM.</p>
+      <div class="case-stats">
+        <div class="cs"><span class="val">3.2x</span><span class="lbl mono">ROAS en campañas</span></div>
+        <div class="cs"><span class="val">+45%</span><span class="lbl mono">Clientes recurrentes</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="receipt-section" id="receipt">
+  <div class="section-head dark-on-paper">
+    <div class="eyebrow mono">Tu recibo</div>
+    <h2>Crecer no debería sentirse como un lujo que no puedes pagar.</h2>
+  </div>
+
+  <div class="receipt">
+    <h4>De La Isla Digital Solutions</h4>
+    <div class="sub">Ticket de consulta · No fiscal</div>
+    <hr>
+    <div class="receipt-line"><span>1x Estrategia de Marca</span><span>$$$</span></div>
+    <div class="receipt-line"><span>1x Contenido &amp; Redes</span><span>$$$</span></div>
+    <div class="receipt-line"><span>1x Paid Media</span><span>$$$</span></div>
+    <hr>
+    <div class="receipt-line total"><span>Total tu crecimiento</span><span>A cotizar</span></div>
+    <div class="thanks">Gracias por elegir marketing con raíces.<br>Hecho para negocios pequeños con planes grandes.</div>
+    <div class="rbarcode" id="receiptBarcode"></div>
+  </div>
+
+  <div class="receipt-cta">
+    <button class="btn-primary" onclick="document.getElementById('consultModal').classList.add('active')" style="border:none; cursor:pointer;">Quiero mi consulta gratis</button>
+  </div>
+</section>
+
+<div class="modal-overlay" id="consultModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('consultModal').classList.remove('active')">&times;</button>
+    <h4>Pide tu consulta gratis</h4>
+    <div class="msub">Cuéntanos de tu negocio — te contactamos en menos de 24h.</div>
+    <form id="consultForm">
+      <label for="cf-name">Nombre</label>
+      <input type="text" id="cf-name" required>
+
+      <label for="cf-business">Negocio</label>
+      <input type="text" id="cf-business" required>
+
+      <label for="cf-email">Email</label>
+      <input type="email" id="cf-email" required>
+
+      <label for="cf-phone">Teléfono (opcional)</label>
+      <input type="tel" id="cf-phone">
+
+      <label for="cf-message">¿Qué necesitas?</label>
+      <textarea id="cf-message" required></textarea>
+
+      <button type="submit" class="modal-submit" id="cf-submit">Enviar</button>
+      <div class="modal-status" id="cf-status"></div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="fcol">
+    <div class="logo" style="margin-bottom:14px; display:flex; flex-direction:column; line-height:1.1;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></div>
+    <p>Marketing empacado con precisión para negocios pequeños con planes grandes.</p>
+  </div>
+  <div class="fcol">
+    <h5>Servicios</h5>
+    <ul>
+      <li><a href="paid-media.html">Paid Media</a></li>
+      <li><a href="contenido-redes.html">Contenido &amp; Redes</a></li>
+      <li><a href="seo-web.html">SEO &amp; Web</a></li>
+      <li><a href="estrategia-marca.html">Estrategia de Marca</a></li>
+      <li><a href="analitica-data.html">Analítica &amp; Data</a></li>
+      <li><a href="email-crm.html">Email &amp; CRM</a></li>
+    </ul>
+  </div>
+  <div class="fcol">
+    <h5>Contacto</h5>
+    <ul>
+      <li><a href="#">hello@delaisladigital.com</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 De La Isla Digital Solutions</div>
+    <div>Marketing con raíces, resultados sin relleno.</div>
+  </div>
+</footer>
+
+<script>
+  // Generate barcode bars
+  function genBarcode(el, count, maxH){
+    if(!el) return;
+    for(let i=0;i<count;i++){
+      const bar = document.createElement('div');
+      const h = Math.random()*maxH*0.6 + maxH*0.4;
+      bar.style.height = h+'px';
+      el.appendChild(bar);
+    }
+  }
+  genBarcode(document.getElementById('heroBarcode'), 26, 30);
+  genBarcode(document.getElementById('receiptBarcode'), 40, 34);
+
+  // 3D tilt on hero label (skipped when the user prefers reduced motion)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heroLabel = document.getElementById('heroLabel');
+  if (!prefersReducedMotion) {
+    document.querySelector('.hero').addEventListener('mousemove', (e) => {
+      const rect = heroLabel.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+      const dx = (e.clientX - cx) / rect.width;
+      const dy = (e.clientY - cy) / rect.height;
+      heroLabel.style.transform = `rotateY(${dx*16}deg) rotateX(${-dy*16}deg)`;
+    });
+    document.querySelector('.hero').addEventListener('mouseleave', () => {
+      heroLabel.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+
+    // 3D tilt on case study cards
+    document.querySelectorAll('.case-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const dx = (e.clientX - rect.left - rect.width/2) / rect.width;
+        const dy = (e.clientY - rect.top - rect.height/2) / rect.height;
+        card.style.transform = `rotateY(${dx*6}deg) rotateX(${-dy*6}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateY(0deg) rotateX(0deg) translateY(0)';
+      });
+    });
+  }
+
+  // Services accordion — clickable and keyboard-operable (Enter/Space)
+  function toggleMenuItem(item, items){
+    const wasOpen = item.classList.contains('open');
+    items.forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.menu-head').setAttribute('aria-expanded', 'false');
+    });
+    if(!wasOpen){
+      item.classList.add('open');
+      item.querySelector('.menu-head').setAttribute('aria-expanded', 'true');
+    }
+  }
+  const menuItems = document.querySelectorAll('.menu-item');
+  menuItems.forEach(item => {
+    const head = item.querySelector('.menu-head');
+    head.addEventListener('click', () => toggleMenuItem(item, menuItems));
+    head.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        toggleMenuItem(item, menuItems);
+      }
+    });
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinksEl = document.getElementById('navLinks');
+  if (navToggle && navLinksEl) {
+    const closeNav = () => {
+      navLinksEl.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinksEl.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    navLinksEl.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navLinksEl.classList.contains('open')) closeNav();
+    });
+  }
+
+  // ── Consultation form → Discord webhook ──────────────────────────
+  // 1. En Discord: Ajustes del canal → Integraciones → Webhooks → Nuevo webhook → Copiar URL
+  // 2. Pega esa URL abajo, reemplazando el texto entre comillas.
+  // ⚠️ No publiques la URL real del webhook en un repositorio público: cualquiera que
+  // vea el código fuente podría usarla para enviar mensajes falsos a tu canal de Discord.
+  // Sustitúyela por tu propia URL en el servidor de despliegue o pásala a través de una
+  // función serverless (Cloudflare Worker / Netlify Function) en lugar de dejarla en el cliente.
+  const DISCORD_WEBHOOK_URL = "PEGA_AQUI_TU_URL_DE_WEBHOOK_DE_DISCORD";
+
+  const consultForm = document.getElementById('consultForm');
+  const cfStatus = document.getElementById('cf-status');
+  const cfSubmit = document.getElementById('cf-submit');
+
+  consultForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (DISCORD_WEBHOOK_URL.includes("PEGA_AQUI")) {
+      cfStatus.textContent = "Falta configurar la URL del webhook de Discord.";
+      cfStatus.className = "modal-status err";
+      return;
+    }
+
+    const name = document.getElementById('cf-name').value;
+    const business = document.getElementById('cf-business').value;
+    const email = document.getElementById('cf-email').value;
+    const phone = document.getElementById('cf-phone').value || "No indicado";
+    const message = document.getElementById('cf-message').value;
+
+    cfSubmit.disabled = true;
+    cfSubmit.textContent = "Enviando...";
+    cfStatus.textContent = "";
+    cfStatus.className = "modal-status";
+
+    const payload = {
+      embeds: [{
+        title: "🧾 Nueva consulta gratis — De La Isla",
+        color: 11834458,
+        fields: [
+          { name: "Nombre", value: name, inline: true },
+          { name: "Negocio", value: business, inline: true },
+          { name: "Email", value: email, inline: false },
+          { name: "Teléfono", value: phone, inline: false },
+          { name: "Qué necesita", value: message, inline: false }
+        ],
+        timestamp: new Date().toISOString()
+      }]
+    };
+
+    try {
+      const res = await fetch(DISCORD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        cfStatus.textContent = "¡Listo! Te contactamos muy pronto.";
+        cfStatus.className = "modal-status ok";
+        consultForm.reset();
+        setTimeout(() => {
+          document.getElementById('consultModal').classList.remove('active');
+          cfStatus.textContent = "";
+        }, 2000);
+      } else {
+        throw new Error("Respuesta no válida de Discord");
+      }
+    } catch (err) {
+      cfStatus.textContent = "No se pudo enviar. Intenta de nuevo.";
+      cfStatus.className = "modal-status err";
+    } finally {
+      cfSubmit.disabled = false;
+      cfSubmit.textContent = "Enviar";
+    }
+  });
+
+  // Close modal on outside click
+  document.getElementById('consultModal').addEventListener('click', (e) => {
+    if (e.target.id === 'consultModal') e.target.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>

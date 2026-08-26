@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paid Media — De La Isla Digital Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" style="display:flex; flex-direction:column; line-height:1.1; text-decoration:none;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li class="nav-dropdown" tabindex="0">
+      <span>Servicios <span class="caret">▾</span></span>
+      <div class="dropdown-menu">
+        <a href="paid-media.html">Paid Media</a>
+        <a href="contenido-redes.html">Contenido &amp; Redes</a>
+        <a href="seo-web.html">SEO &amp; Web</a>
+        <a href="estrategia-marca.html">Estrategia de Marca</a>
+        <a href="analitica-data.html">Analítica &amp; Data</a>
+        <a href="email-crm.html">Email &amp; CRM</a>
+      </div>
+    </li>
+    <li><a href="index.html#why">Nosotros</a></li>
+    <li><a href="index.html#casos">Casos</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openConsultModal()">🛒 Consulta gratis</button>
+</nav>
+
+<div class="crumb"><a href="index.html">Inicio</a> / <a href="index.html#aisle">Servicios</a> / Paid Media</div>
+
+<section class="service-hero" style="display:flex; justify-content:space-between; align-items:flex-end; gap:40px; flex-wrap:wrap;">
+  <div style="max-width:600px;">
+    <span class="sku">SKU DLI-001 · Paid Media</span>
+    <h1>Anuncios que <em>venden</em>, no que solo se ven bonitos.</h1>
+    <p class="sub">Gestionamos tu inversión en Meta, Google y TikTok como si fuera nuestro propio dinero: cada peso tiene que traer un resultado que puedas contar, no solo un "me gusta".</p>
+    <div class="ctas">
+      <button class="btn-primary" onclick="openConsultModal()">Quiero anuncios que funcionen</button>
+      <a href="#tamanos" class="btn-ghost">Ver paquetes ↓</a>
+    </div>
+  </div>
+  <div class="label-wrap" id="heroLabel">
+    <div class="label">
+      <div class="brand mono">De La Isla · Etiqueta del producto</div>
+      <div class="name">Paid Media</div>
+      <div class="label-facts">
+        <div class="title">Información nutricional</div>
+        <div class="fact-row"><span>Alcance real</span><span>Alto</span></div>
+        <div class="fact-row"><span>Optimización</span><span>Semanal</span></div>
+        <div class="fact-row"><span>Jerga innecesaria</span><span>0%</span></div>
+        <div class="fact-row"><span>Reportes claros</span><span>100%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Qué incluye</div>
+    <h2>Todo lo que necesitas para que un anuncio deje de ser una apuesta.</h2>
+  </div>
+  <div class="content-list">
+    <div class="content-item">
+      <div class="mark">01</div>
+      <p><strong>Auditoría de cuentas activas</strong>Revisamos qué has probado antes y por qué funcionó o no, antes de gastar un solo peso más.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">02</div>
+      <p><strong>Segmentación y objetivos claros</strong>Definimos a quién le hablamos y qué queremos que haga: comprar, agendar, escribir.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">03</div>
+      <p><strong>Creatividad y copy que convierte</strong>Anuncios pensados para detener el scroll, no solo para pasar la revisión de la plataforma.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">04</div>
+      <p><strong>Optimización semanal</strong>Ajustamos presupuesto y creatividades según lo que realmente está funcionando, no según el calendario.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">05</div>
+      <p><strong>Retargeting inteligente</strong>Le volvemos a hablar a quien ya mostró interés, en el momento correcto.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">06</div>
+      <p><strong>Reporte mensual en español, no en jerga</strong>Sabrás exactamente en qué se fue tu inversión y qué trajo de vuelta.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Cómo lo hacemos</div>
+    <h2>Cuatro pasos, sin vueltas.</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="snum mono">01</div>
+      <h4>Diagnóstico</h4>
+      <p>Revisamos tus cuentas actuales o partimos de cero si es tu primera campaña.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">02</div>
+      <h4>Estrategia</h4>
+      <p>Definimos canales, presupuesto y qué resultado vamos a perseguir.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">03</div>
+      <h4>Lanzamiento</h4>
+      <p>Publicamos y probamos variantes de copy, imagen y audiencia.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">04</div>
+      <h4>Optimización</h4>
+      <p>Cada semana ajustamos con datos reales, no con corazonadas.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tamanos">
+  <div class="section-head">
+    <div class="eyebrow mono">Elige tu tamaño</div>
+    <h2>Empieza pequeño o ve directo por todo el anaquel.</h2>
+  </div>
+  <div class="sizes">
+    <div class="size-card">
+      <div class="stag">Individual</div>
+      <h3>Un canal</h3>
+      <ul>
+        <li>Meta Ads o Google Ads</li>
+        <li>1 objetivo de campaña</li>
+        <li>Reporte mensual</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+    <div class="size-card featured">
+      <div class="stag">Combo</div>
+      <h3>Dos canales</h3>
+      <ul>
+        <li>Meta + Google, coordinados</li>
+        <li>Retargeting incluido</li>
+        <li>Optimización semanal</li>
+        <li>Reporte mensual + llamada</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+    <div class="size-card">
+      <div class="stag">Familiar</div>
+      <h3>Cobertura completa</h3>
+      <ul>
+        <li>Meta + Google + TikTok</li>
+        <li>Creatividad mensual dedicada</li>
+        <li>Retargeting avanzado</li>
+        <li>Revisión quincenal</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Resultado real</div>
+    <h2>Café Maré</h2>
+  </div>
+  <div class="case-mini">
+    <div>
+      <span class="tag mono">Café Maré · Retail</span>
+      <h3>De cafetería de barrio a marca con lista de espera</h3>
+      <p>Reorganizamos su inversión publicitaria para enfocarla en las horas del día donde más lo necesitaban: las horas valle.</p>
+    </div>
+    <div class="cstats">
+      <div class="cs"><div class="val">+68%</div><div class="lbl mono">Ventas horas valle</div></div>
+      <div class="cs"><div class="val">−22%</div><div class="lbl mono">Costo por cliente</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="section-head dark-on-paper" style="margin-bottom:0;">
+    <h2>Deja de pagarle a la suerte por tus anuncios.</h2>
+    <p class="sub">Agenda tu consulta gratis y te decimos, sin compromiso, qué está fallando hoy.</p>
+    <div class="ctas">
+      <button class="btn-primary on-paper" onclick="openConsultModal()">Quiero mi consulta gratis</button>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="consultModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeConsultModal()">&times;</button>
+    <h4>Pide tu consulta gratis</h4>
+    <div class="msub">Cuéntanos de tu negocio — te contactamos en menos de 24h.</div>
+    <form id="consultForm" data-service="Paid Media">
+      <label for="cf-name">Nombre</label>
+      <input type="text" id="cf-name" required>
+      <label for="cf-business">Negocio</label>
+      <input type="text" id="cf-business" required>
+      <label for="cf-email">Email</label>
+      <input type="email" id="cf-email" required>
+      <label for="cf-phone">Teléfono (opcional)</label>
+      <input type="tel" id="cf-phone">
+      <label for="cf-message">¿Qué necesitas?</label>
+      <textarea id="cf-message" required></textarea>
+      <button type="submit" class="modal-submit" id="cf-submit">Enviar</button>
+      <div class="modal-status" id="cf-status"></div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="fcol">
+    <a href="index.html" class="logo" style="margin-bottom:14px; display:flex; flex-direction:column; line-height:1.1; text-decoration:none;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></a>
+    <p>Marketing empacado con precisión para negocios pequeños con planes grandes.</p>
+  </div>
+  <div class="fcol">
+    <h5>Servicios</h5>
+    <ul>
+      <li><a href="paid-media.html">Paid Media</a></li>
+      <li><a href="contenido-redes.html">Contenido &amp; Redes</a></li>
+      <li><a href="seo-web.html">SEO &amp; Web</a></li>
+      <li><a href="estrategia-marca.html">Estrategia de Marca</a></li>
+      <li><a href="analitica-data.html">Analítica &amp; Data</a></li>
+      <li><a href="email-crm.html">Email &amp; CRM</a></li>
+    </ul>
+  </div>
+  <div class="fcol">
+    <h5>Contacto</h5>
+    <ul>
+      <li><a href="#">hello@delaisladigital.com</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 De La Isla Digital Solutions</div>
+    <div>Marketing con raíces, resultados sin relleno.</div>
+  </div>
+</footer>
+
+<script src="consult-modal.js"></script>
+
+</body>
+</html>
