@@ -49,3 +49,29 @@ elemento queda invisible.
 
 Abre `index.html` en el navegador. Tailwind se carga por CDN y las fuentes desde Google Fonts.
 El formulario es una demo: no envía datos, hay que conectar un endpoint en el manejador `submit`.
+
+## Fotos de fondo
+
+Tres secciones (hero, servicios y CTA) admiten foto de fondo. Para ponerla basta con
+cambiar una variable en `:root`:
+
+```css
+--photo-hero: url('assets/equipo.webp');
+```
+
+Sobre la foto se pinta siempre un velo de marca. Su opacidad no es estética: está calculada
+para el peor caso posible — que la foto tenga píxeles de blanco o negro puro justo detrás del
+texto — de modo que nunca se baje de 4.5:1.
+
+| Sección | Velo | Opacidad mínima | Usada |
+|---|---|---|---|
+| Hero | `#FDF2F8` | 0.82 | 0.86 |
+| Servicios | `#0F172A` | 0.71 | 0.78 |
+| CTA | `#EC4899` | 0.86 | 0.90 |
+
+Verificado en Chromium sustituyendo los fondos por una imagen de bandas de blanco y negro
+puros: el peor contraste resultante es **4.90:1**. No bajes estas opacidades al poner fotos
+muy contrastadas.
+
+El parallax (`background-attachment: fixed`) se aplica solo a partir de 1024 px y se desactiva
+con `prefers-reduced-motion`, porque da saltos en móvil.

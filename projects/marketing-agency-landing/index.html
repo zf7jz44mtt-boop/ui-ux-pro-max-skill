@@ -69,6 +69,45 @@
     .marquee:focus-within .marquee-track,
     .marquee.is-paused .marquee-track { animation-play-state: paused; }
 
+
+    /* ---- Fotos de fondo ---------------------------------------------------
+       Cada seccion tiene un "slot". Para poner una foto real basta con cambiar
+       la variable por una URL:
+           --photo-hero: url('assets/equipo.webp');
+       o con image-set() para servir WebP y varias densidades:
+           --photo-hero: image-set(url('a.webp') type('image/webp') 1x,
+                                   url('a@2x.webp') type('image/webp') 2x);
+       Por defecto llevan un degradado de marca, asi que la pagina se ve
+       terminada sin depender de ningun archivo externo.
+
+       El velo (scrim) se pinta SIEMPRE por delante de la foto. Su opacidad esta
+       calculada para el peor caso posible -- que la foto tenga pixeles de blanco
+       o de negro puro justo detras del texto -- de modo que nunca se baje de
+       4.5:1. Minimos calculados: hero 0.82, servicios 0.71, CTA 0.86; se usan
+       valores algo por encima para dejar margen.
+       Si subes una foto muy contrastada, no bajes estas opacidades. */
+    :root {
+      --photo-hero: radial-gradient(60% 80% at 78% 18%, #F472B6 0%, transparent 60%),
+                    radial-gradient(50% 60% at 12% 85%, #67E8F9 0%, transparent 65%),
+                    radial-gradient(70% 70% at 45% 40%, #FBCFE8 0%, #FDF2F8 70%);
+      --photo-servicios: radial-gradient(45% 60% at 85% 15%, #0891B2 0%, transparent 62%),
+                         radial-gradient(55% 70% at 10% 90%, #EC4899 0%, transparent 60%),
+                         linear-gradient(160deg, #1E293B 0%, #0F172A 100%);
+      --photo-cta: radial-gradient(50% 70% at 20% 20%, #FBCFE8 0%, transparent 60%),
+                   radial-gradient(60% 80% at 90% 90%, #9D174D 0%, transparent 65%),
+                   linear-gradient(200deg, #F472B6 0%, #EC4899 100%);
+    }
+    .photo-bg { background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .photo-hero      { background-image: linear-gradient(rgba(253,242,248,.86), rgba(253,242,248,.86)), var(--photo-hero); }
+    .photo-servicios { background-image: linear-gradient(rgba(15,23,42,.78), rgba(15,23,42,.78)), var(--photo-servicios); }
+    .photo-cta       { background-image: linear-gradient(rgba(236,72,153,.90), rgba(236,72,153,.90)), var(--photo-cta); }
+
+    /* Parallax solo en pantallas grandes: background-attachment:fixed da saltos
+       en iOS/Android y es el efecto que mas molesta con reduced-motion. */
+    @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+      .photo-bg { background-attachment: fixed; }
+    }
+
     /* Diagonal brutalist pattern */
     .pattern-stripes {
       background-image: repeating-linear-gradient(45deg, #0F172A 0 2px, transparent 2px 12px);
@@ -139,7 +178,7 @@
   <main id="main">
 
     <!-- ============ CAPÍTULO 00 — GANCHO / HERO ============ -->
-    <section class="relative overflow-hidden border-b-[3px] border-ink px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pb-28 lg:pt-24">
+    <section class="photo-bg photo-hero relative overflow-hidden border-b-[3px] border-ink px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pb-28 lg:pt-24">
       <div class="pointer-events-none absolute -right-24 -top-24 hidden h-72 w-72 rotate-12 border-[3px] border-ink bg-secondary/40 lg:block" aria-hidden="true"></div>
       <div class="pointer-events-none absolute bottom-10 right-8 hidden h-32 w-32 pattern-stripes opacity-15 lg:block" aria-hidden="true"></div>
 
@@ -309,7 +348,7 @@
     </section>
 
     <!-- ============ CAPÍTULO 03 — SERVICIOS / SOLUCIÓN ============ -->
-    <section id="servicios" class="border-b-[3px] border-ink bg-ink px-4 py-20 text-white sm:px-6 lg:px-8 lg:py-28" aria-labelledby="servicios-title">
+    <section id="servicios" class="photo-bg photo-servicios border-b-[3px] border-ink bg-ink px-4 py-20 text-white sm:px-6 lg:px-8 lg:py-28" aria-labelledby="servicios-title">
       <div class="mx-auto max-w-7xl">
         <p class="reveal font-display text-2xl tracking-widest text-secondary">CAPÍTULO 03</p>
         <h2 id="servicios-title" class="reveal mt-2 max-w-4xl font-display text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
@@ -452,7 +491,7 @@
     </section>
 
     <!-- ============ CLÍMAX — CTA + FORMULARIO ============ -->
-    <section id="contacto" class="border-b-[3px] border-ink bg-primary px-4 py-20 sm:px-6 lg:px-8 lg:py-28" aria-labelledby="contacto-title">
+    <section id="contacto" class="photo-bg photo-cta border-b-[3px] border-ink bg-primary px-4 py-20 sm:px-6 lg:px-8 lg:py-28" aria-labelledby="contacto-title">
       <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_1fr] lg:items-start">
         <div>
           <h2 id="contacto-title" class="reveal font-display text-6xl leading-[0.92] text-on-primary sm:text-7xl lg:text-8xl">
