@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analítica &amp; Data — De La Isla Digital Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" style="display:flex; flex-direction:column; line-height:1.1; text-decoration:none;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li class="nav-dropdown" tabindex="0">
+      <span>Servicios <span class="caret">▾</span></span>
+      <div class="dropdown-menu">
+        <a href="paid-media.html">Paid Media</a>
+        <a href="contenido-redes.html">Contenido &amp; Redes</a>
+        <a href="seo-web.html">SEO &amp; Web</a>
+        <a href="estrategia-marca.html">Estrategia de Marca</a>
+        <a href="analitica-data.html">Analítica &amp; Data</a>
+        <a href="email-crm.html">Email &amp; CRM</a>
+      </div>
+    </li>
+    <li><a href="index.html#why">Nosotros</a></li>
+    <li><a href="index.html#casos">Casos</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openConsultModal()">🛒 Consulta gratis</button>
+</nav>
+
+<div class="crumb"><a href="index.html">Inicio</a> / <a href="index.html#aisle">Servicios</a> / Analítica &amp; Data</div>
+
+<section class="service-hero" style="display:flex; justify-content:space-between; align-items:flex-end; gap:40px; flex-wrap:wrap;">
+  <div style="max-width:600px;">
+    <span class="sku">SKU DLI-005 · Analítica &amp; Data</span>
+    <h1>Si no se puede <em>medir</em>, no sabes si está funcionando.</h1>
+    <p class="sub">Dashboards claros que responden una sola pregunta cada mes: ¿esto nos está haciendo crecer, o solo se ve ocupado?</p>
+    <div class="ctas">
+      <button class="btn-primary" onclick="openConsultModal()">Quiero ver mis números claros</button>
+      <a href="#tamanos" class="btn-ghost">Ver paquetes ↓</a>
+    </div>
+  </div>
+  <div class="label-wrap" id="heroLabel">
+    <div class="label">
+      <div class="brand mono">De La Isla · Etiqueta del producto</div>
+      <div class="name">Analítica &amp; Data</div>
+      <div class="label-facts">
+        <div class="title">Información nutricional</div>
+        <div class="fact-row"><span>Métricas de vanidad</span><span>0%</span></div>
+        <div class="fact-row"><span>Reportes accionables</span><span>100%</span></div>
+        <div class="fact-row"><span>Frecuencia</span><span>Mensual</span></div>
+        <div class="fact-row"><span>Lenguaje</span><span>Humano</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Qué incluye</div>
+    <h2>Todo lo que necesitas para dejar de adivinar.</h2>
+  </div>
+  <div class="content-list">
+    <div class="content-item">
+      <div class="mark">01</div>
+      <p><strong>Configuración de tracking</strong>Dejamos todo conectado para medir lo que realmente importa desde el día uno.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">02</div>
+      <p><strong>Dashboard a la medida</strong>Un solo lugar donde ves cómo va tu negocio, sin abrir cinco pestañas distintas.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">03</div>
+      <p><strong>Revisión mensual explicada</strong>Te explicamos los números en una llamada, no en un PDF de 40 páginas.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">04</div>
+      <p><strong>Identificación de fugas</strong>Encontramos en qué parte del proceso estás perdiendo clientes o dinero.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">05</div>
+      <p><strong>Recomendaciones accionables</strong>No solo datos: te decimos qué hacer con ellos.</p>
+    </div>
+    <div class="content-item">
+      <div class="mark">06</div>
+      <p><strong>Historial comparativo</strong>Ves tu progreso mes a mes, no solo una foto aislada.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Cómo lo hacemos</div>
+    <h2>Cuatro pasos, sin vueltas.</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="snum mono">01</div>
+      <h4>Configuración</h4>
+      <p>Conectamos tus canales para que todo se mida desde un solo lugar.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">02</div>
+      <h4>Dashboard</h4>
+      <p>Construimos un tablero claro, con solo las métricas que importan.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">03</div>
+      <h4>Revisión</h4>
+      <p>Te explicamos qué significan los números cada mes.</p>
+    </div>
+    <div class="step">
+      <div class="snum mono">04</div>
+      <h4>Recomendación</h4>
+      <p>Definimos juntos el siguiente paso, basado en datos reales.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tamanos">
+  <div class="section-head">
+    <div class="eyebrow mono">Elige tu tamaño</div>
+    <h2>Empieza pequeño o ve directo por todo el anaquel.</h2>
+  </div>
+  <div class="sizes">
+    <div class="size-card">
+      <div class="stag">Básico</div>
+      <h3>Dashboard simple</h3>
+      <ul>
+        <li>Tracking configurado</li>
+        <li>Dashboard de un canal</li>
+        <li>Reporte mensual</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+    <div class="size-card featured">
+      <div class="stag">Negocio</div>
+      <h3>Dashboard + revisión</h3>
+      <ul>
+        <li>Dashboard multicanal</li>
+        <li>Llamada mensual explicada</li>
+        <li>Identificación de fugas</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+    <div class="size-card">
+      <div class="stag">Avanzado</div>
+      <h3>Dashboard + estrategia</h3>
+      <ul>
+        <li>Todo lo de Negocio</li>
+        <li>Comparativas mes a mes</li>
+        <li>Recomendaciones accionables</li>
+      </ul>
+      <div class="sprice mono">Desde $$$</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow mono">Resultado real</div>
+    <h2>Estudio Verde</h2>
+  </div>
+  <div class="case-mini">
+    <div>
+      <span class="tag mono">Estudio Verde · Diseño</span>
+      <h3>Dejaron de adivinar qué campaña funcionaba de verdad</h3>
+      <p>Un dashboard claro les mostró qué canal traía clientes reales y cuál solo generaba tráfico sin ventas.</p>
+    </div>
+    <div class="cstats">
+      <div class="cs"><div class="val">+52%</div><div class="lbl mono">Presupuesto reasignado a lo que funciona</div></div>
+      <div class="cs"><div class="val">0h</div><div class="lbl mono">Armando reportes a mano</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="section-head dark-on-paper" style="margin-bottom:0;">
+    <h2>Deja de tomar decisiones a ciegas.</h2>
+    <p class="sub">Agenda tu consulta gratis y revisamos juntos qué está midiendo tu negocio hoy.</p>
+    <div class="ctas">
+      <button class="btn-primary on-paper" onclick="openConsultModal()">Quiero mi consulta gratis</button>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="consultModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeConsultModal()">&times;</button>
+    <h4>Pide tu consulta gratis</h4>
+    <div class="msub">Cuéntanos de tu negocio — te contactamos en menos de 24h.</div>
+    <form id="consultForm" data-service="Analítica & Data">
+      <label for="cf-name">Nombre</label>
+      <input type="text" id="cf-name" required>
+      <label for="cf-business">Negocio</label>
+      <input type="text" id="cf-business" required>
+      <label for="cf-email">Email</label>
+      <input type="email" id="cf-email" required>
+      <label for="cf-phone">Teléfono (opcional)</label>
+      <input type="tel" id="cf-phone">
+      <label for="cf-message">¿Qué necesitas?</label>
+      <textarea id="cf-message" required></textarea>
+      <button type="submit" class="modal-submit" id="cf-submit">Enviar</button>
+      <div class="modal-status" id="cf-status"></div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="fcol">
+    <a href="index.html" class="logo" style="margin-bottom:14px; display:flex; flex-direction:column; line-height:1.1; text-decoration:none;"><span style="font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.02em; color:var(--cream); display:flex; align-items:baseline; line-height:1.1;">DE LA <span style="color:var(--brass); display:inline-flex; align-items:baseline; margin-left:0.15em;"><svg width="17" height="21" viewBox="0 0 26 30" style="display:inline-block; vertical-align:-3px;" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#B4915A" stroke-width="2" stroke-linecap="round"><path d="M20,28 C18,22 12,20 13,12"/><path d="M13,12 C8,9 3,10 1,16"/><path d="M13,12 C10,7 6,6 4,10"/><path d="M13,12 C13,6 11,3 8,1"/><path d="M13,12 C16,6 19,4 21,2"/><path d="M13,12 C18,9 23,10 25,16"/><path d="M13,12 C16,7 20,7 22,11"/><circle cx="11" cy="14.5" r="1.3" fill="#B4915A" stroke="none"/><circle cx="15" cy="15.5" r="1.3" fill="#B4915A" stroke="none"/></svg>SLA</span></span><span style="font-family:'Inter', sans-serif; font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(239,232,216,0.5); margin-top:3px; display:block;">Digital Solutions</span></a>
+    <p>Marketing empacado con precisión para negocios pequeños con planes grandes.</p>
+  </div>
+  <div class="fcol">
+    <h5>Servicios</h5>
+    <ul>
+      <li><a href="paid-media.html">Paid Media</a></li>
+      <li><a href="contenido-redes.html">Contenido &amp; Redes</a></li>
+      <li><a href="seo-web.html">SEO &amp; Web</a></li>
+      <li><a href="estrategia-marca.html">Estrategia de Marca</a></li>
+      <li><a href="analitica-data.html">Analítica &amp; Data</a></li>
+      <li><a href="email-crm.html">Email &amp; CRM</a></li>
+    </ul>
+  </div>
+  <div class="fcol">
+    <h5>Contacto</h5>
+    <ul>
+      <li><a href="#">hello@delaisladigital.com</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 De La Isla Digital Solutions</div>
+    <div>Marketing con raíces, resultados sin relleno.</div>
+  </div>
+</footer>
+
+<script src="consult-modal.js"></script>
+
+</body>
+</html>
