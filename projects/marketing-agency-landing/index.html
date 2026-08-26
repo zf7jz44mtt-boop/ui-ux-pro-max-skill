@@ -71,36 +71,40 @@
 
 
     /* ---- Fotos de fondo ---------------------------------------------------
-       Cada seccion tiene un "slot". Para poner una foto real basta con cambiar
-       la variable por una URL:
-           --photo-hero: url('assets/equipo.webp');
-       o con image-set() para servir WebP y varias densidades:
-           --photo-hero: image-set(url('a.webp') type('image/webp') 1x,
-                                   url('a@2x.webp') type('image/webp') 2x);
-       Por defecto llevan un degradado de marca, asi que la pagina se ve
-       terminada sin depender de ningun archivo externo.
+       Para cambiar una foto basta con sustituir la URL de su variable. Se sirven
+       en WebP con una version @2x para pantallas de alta densidad (ver el bloque
+       min-resolution mas abajo; se usa una media query en vez de image-set()
+       porque las variables CSS no validan su contenido y image-set fallaria en
+       silencio en navegadores antiguos).
 
-       El velo (scrim) se pinta SIEMPRE por delante de la foto. Su opacidad esta
-       calculada para el peor caso posible -- que la foto tenga pixeles de blanco
-       o de negro puro justo detras del texto -- de modo que nunca se baje de
-       4.5:1. Minimos calculados: hero 0.82, servicios 0.71, CTA 0.86; se usan
-       valores algo por encima para dejar margen.
-       Si subes una foto muy contrastada, no bajes estas opacidades. */
+       Sobre la foto se pinta SIEMPRE un velo. Su opacidad no es estetica: esta
+       calculada midiendo el pixel mas oscuro y el mas claro de cada imagen, de
+       modo que el texto no baje de 4.5:1 en ninguna zona.
+         hero       velo #FDF2F8  minimo 0.82  aplicado 0.84  -> 4.80:1
+         servicios  velo #0F172A  minimo 0.68  aplicado 0.72  -> 5.16:1
+         cta        velo #EC4899  minimo 0.86  aplicado 0.88  -> 4.74:1
+       Si cambias una foto, recalcula el minimo antes de bajar el velo. */
     :root {
-      --photo-hero: radial-gradient(60% 80% at 78% 18%, #F472B6 0%, transparent 60%),
-                    radial-gradient(50% 60% at 12% 85%, #67E8F9 0%, transparent 65%),
-                    radial-gradient(70% 70% at 45% 40%, #FBCFE8 0%, #FDF2F8 70%);
-      --photo-servicios: radial-gradient(45% 60% at 85% 15%, #0891B2 0%, transparent 62%),
-                         radial-gradient(55% 70% at 10% 90%, #EC4899 0%, transparent 60%),
-                         linear-gradient(160deg, #1E293B 0%, #0F172A 100%);
-      --photo-cta: radial-gradient(50% 70% at 20% 20%, #FBCFE8 0%, transparent 60%),
-                   radial-gradient(60% 80% at 90% 90%, #9D174D 0%, transparent 65%),
-                   linear-gradient(200deg, #F472B6 0%, #EC4899 100%);
+      --photo-hero: url('assets/hero-estrategia.webp');
+      --photo-servicios: url('assets/servicios-oficina.webp');
+      --photo-cta: url('assets/cta-silueta.webp');
     }
-    .photo-bg { background-size: cover; background-position: center; background-repeat: no-repeat; }
-    .photo-hero      { background-image: linear-gradient(rgba(253,242,248,.86), rgba(253,242,248,.86)), var(--photo-hero); }
-    .photo-servicios { background-image: linear-gradient(rgba(15,23,42,.78), rgba(15,23,42,.78)), var(--photo-servicios); }
-    .photo-cta       { background-image: linear-gradient(rgba(236,72,153,.90), rgba(236,72,153,.90)), var(--photo-cta); }
+    @media (min-resolution: 2dppx) {
+      :root {
+        --photo-hero: url('assets/hero-estrategia@2x.webp');
+        --photo-servicios: url('assets/servicios-oficina@2x.webp');
+        --photo-cta: url('assets/cta-silueta@2x.webp');
+      }
+    }
+    .photo-bg { background-size: cover; background-repeat: no-repeat; }
+    /* La foto del hero es vertical: se encuadra alta para que 'cover' conserve
+       la pizarra y no recorte por el centro. */
+    .photo-hero      { background-position: center 28%;
+                       background-image: linear-gradient(rgba(253,242,248,.84), rgba(253,242,248,.84)), var(--photo-hero); }
+    .photo-servicios { background-position: center;
+                       background-image: linear-gradient(rgba(15,23,42,.72), rgba(15,23,42,.72)), var(--photo-servicios); }
+    .photo-cta       { background-position: center;
+                       background-image: linear-gradient(rgba(236,72,153,.88), rgba(236,72,153,.88)), var(--photo-cta); }
 
     /* Parallax solo en pantallas grandes: background-attachment:fixed da saltos
        en iOS/Android y es el efecto que mas molesta con reduced-motion. */

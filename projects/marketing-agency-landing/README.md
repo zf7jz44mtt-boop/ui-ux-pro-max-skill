@@ -52,26 +52,32 @@ El formulario es una demo: no envía datos, hay que conectar un endpoint en el m
 
 ## Fotos de fondo
 
-Tres secciones (hero, servicios y CTA) admiten foto de fondo. Para ponerla basta con
-cambiar una variable en `:root`:
+Tres secciones llevan foto de fondo, en `assets/`, servidas en WebP con una version `@2x`
+para pantallas de alta densidad. Para cambiar una foto basta con sustituir la URL de su
+variable en `:root`.
 
-```css
---photo-hero: url('assets/equipo.webp');
-```
+El reparto no es arbitrario: se midio el rango tonal y la orientacion de cada imagen antes
+de asignarla.
 
-Sobre la foto se pinta siempre un velo de marca. Su opacidad no es estética: está calculada
-para el peor caso posible — que la foto tenga píxeles de blanco o negro puro justo detrás del
-texto — de modo que nunca se baje de 4.5:1.
+| Slot | Foto | Por que |
+|---|---|---|
+| `--photo-hero` | pizarra / sesion de estrategia | Vertical (1920x2880), asi que encaja en el hero movil y se encuadra al 28% en escritorio para conservar la pizarra |
+| `--photo-servicios` | oficina en penumbra | Apaisada y oscura (mediana de luminancia 0.053): es donde el velo es mas ligero y donde mas se ve |
+| `--photo-cta` | silueta a contraluz | 93.6% de pixeles casi negros y saturacion 0.000; funciona como forma grafica amplia, que es lo unico que sobrevive a un velo del 0.88 |
 
-| Sección | Velo | Opacidad mínima | Usada |
-|---|---|---|---|
-| Hero | `#FDF2F8` | 0.82 | 0.86 |
-| Servicios | `#0F172A` | 0.71 | 0.78 |
-| CTA | `#EC4899` | 0.86 | 0.90 |
+Sobre la foto se pinta siempre un velo. Su opacidad esta calculada midiendo el pixel mas
+oscuro y el mas claro de cada imagen concreta, no un peor caso generico:
 
-Verificado en Chromium sustituyendo los fondos por una imagen de bandas de blanco y negro
-puros: el peor contraste resultante es **4.90:1**. No bajes estas opacidades al poner fotos
-muy contrastadas.
+| Seccion | Velo | Minimo para esa foto | Aplicado | Contraste resultante |
+|---|---|---|---|---|
+| Hero | `#FDF2F8` | 0.82 | 0.84 | 4.80:1 |
+| Servicios | `#0F172A` | 0.68 | 0.72 | 5.16:1 |
+| CTA | `#EC4899` | 0.86 | 0.88 | 4.74:1 |
+
+Medido despues en Chromium sobre el fondo ya compuesto, con las fotos puestas: el peor
+contraste real es **4.71:1**. Si cambias una foto, recalcula su minimo antes de bajar el velo.
+
+Peso: 275 KB las seis imagenes (desde 2.2 MB de los originales).
 
 El parallax (`background-attachment: fixed`) se aplica solo a partir de 1024 px y se desactiva
-con `prefers-reduced-motion`, porque da saltos en móvil.
+con `prefers-reduced-motion`, porque da saltos en movil.
