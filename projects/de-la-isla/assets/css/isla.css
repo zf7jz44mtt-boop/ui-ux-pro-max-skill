@@ -36,6 +36,7 @@
   --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px;
   --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px;
 
+  --slide-w:min(520px, 78vw);
   --radius:3px;
   --radius-lg:14px;
   --shell:1240px;
@@ -46,7 +47,17 @@
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+  /* `clip` stops sideways panning without turning the page into a scroll
+     container the way overflow-x:hidden on <body> does — that variant lets
+     iOS Safari pan anyway. */
+  overflow-x:clip;
+}
+@supports not (overflow: clip){
+  html, body{ overflow-x:hidden; }
+}
 body{
   margin:0;
   background:var(--sea-900);
@@ -55,7 +66,6 @@ body{
   font-size:17px;
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
 }
 img{ max-width:100%; display:block; }
 ::selection{ background:var(--gold); color:var(--sea-900); }
@@ -229,6 +239,16 @@ section[id]{ scroll-margin-top:96px; }
 .stat__label{ color:var(--sand-faint); font-size:14px; }
 
 /* ---------- Coverflow slider (Trabajos) ---------- */
+/* Full-bleed track: the 3D neighbours sit outside the text column on purpose,
+   and this wrapper is what keeps them from widening the document. */
+.coverflow-bleed{
+  overflow-x:clip;
+  overflow-y:visible;
+  padding-inline:var(--s-5);
+}
+@supports not (overflow: clip){
+  .coverflow-bleed{ overflow-x:hidden; }
+}
 .coverflow{
   position:relative; height:clamp(430px, 56vw, 560px);
   perspective:1600px; touch-action:pan-y; cursor:grab; user-select:none;
@@ -236,8 +256,8 @@ section[id]{ scroll-margin-top:96px; }
 .coverflow.is-dragging{ cursor:grabbing; }
 .coverflow__stage{ position:absolute; inset:0; transform-style:preserve-3d; }
 .slide{
-  position:absolute; top:0; left:50%; width:min(520px, 78vw); height:100%;
-  margin-left:calc(min(520px, 78vw) / -2);
+  position:absolute; top:0; left:50%; width:var(--slide-w); height:100%;
+  margin-left:calc(var(--slide-w) / -2);
   border-radius:var(--radius-lg); overflow:hidden;
   border:1px solid var(--line); background:var(--sea-800);
   transform-style:preserve-3d; will-change:transform, opacity;
@@ -252,7 +272,10 @@ section[id]{ scroll-margin-top:96px; }
 }
 .slide__art svg{ width:100%; height:100%; }
 .slide__tag{
-  position:absolute; z-index:2; top:var(--s-4); left:var(--s-4);
+  /* Anchored to the foot of the artwork: the illustrations put their sun and
+     sky up top, and a pill there collided with them once the art started
+     filling the box. */
+  position:absolute; z-index:2; bottom:var(--s-4); left:var(--s-4);
   background:rgba(7,25,31,.72); border:1px solid var(--line);
   padding:6px 12px; border-radius:100px; color:var(--gold-soft);
   backdrop-filter:blur(6px);
@@ -473,9 +496,23 @@ input[type="range"]::-moz-range-thumb{
   .contact{ grid-template-columns:1fr; gap:var(--s-7); }
   .footer-grid{ grid-template-columns:1fr; }
   .hero__inner{ padding:130px 0 90px; }
-  .compare{ aspect-ratio:4 / 3; }
+  /* No side-by-side room on phones: the veil turns top-heavy so the copy sits
+     on a calm ground while the sea and the island still read underneath it. */
+  .hero__veil{
+    background:linear-gradient(180deg, rgba(7,25,31,.90) 0%, rgba(7,25,31,.62) 34%,
+      rgba(7,25,31,.44) 60%, rgba(7,25,31,.72) 88%, var(--sea-900) 100%);
+  }
   .calc{ padding:var(--s-5); }
+  .calc__row{ flex-direction:column; align-items:flex-start; gap:var(--s-2); }
+  .calc__value{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+  .calc__value small{ font-size:12px; }
+  /* One card at a time: neighbours keep just enough edge to invite a swipe. */
+  :root{ --slide-w:min(520px, 88vw); }
   .coverflow{ height:clamp(575px, 150vw, 660px); }
+  .slide__body p{
+    display:-webkit-box; -webkit-box-orient:vertical;
+    -webkit-line-clamp:5; line-clamp:5; overflow:hidden;
+  }
   .slide{ grid-template-rows:140px auto; }
   .slide__body{ padding:var(--s-4) var(--s-4) var(--s-5); }
   .slide__body h3{ font-size:23px; }

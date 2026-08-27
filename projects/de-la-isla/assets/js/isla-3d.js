@@ -340,7 +340,9 @@ export function initIslaScene(canvas){
   scene.add(fill);
 
   /* ---- sizing ---------------------------------------------------------- */
-  let lookAtX = 1.8;
+  // Framing differs per breakpoint: on phones the island drops into the lower
+  // third so the copy above it stays on a clean ground.
+  const framing = { camY: 0, lookX: 1.8, lookY: 1.4 };
   function resize(){
     const w = canvas.clientWidth || window.innerWidth;
     const h = canvas.clientHeight || window.innerHeight;
@@ -350,9 +352,12 @@ export function initIslaScene(canvas){
     // Pull the camera back on narrow screens so the island still reads.
     const narrow = w < 760;
     camera.fov = narrow ? 58 : 42;
-    island.position.x = narrow ? 2.2 : 5.0;
+    // Keep the island hugging the right edge across phone widths.
+    island.position.x = narrow ? (w < 380 ? 3.4 : 4.2) : 5.0;
     island.position.z = narrow ? -8.5 : -7;
-    lookAtX = narrow ? 0.8 : 1.8;
+    framing.camY = narrow ? 0.5 : 0;
+    framing.lookX = narrow ? -0.2 : 1.8;
+    framing.lookY = narrow ? 0.9 : 1.4;
     camera.updateProjectionMatrix();
   }
   resize();
@@ -393,9 +398,9 @@ export function initIslaScene(canvas){
     const scrolled = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 1);
 
     camera.position.x = camHome.x + pointer.x * 1.5;
-    camera.position.y = camHome.y + pointer.y * 0.7 + scrolled * 2.6;
+    camera.position.y = camHome.y + framing.camY + pointer.y * 0.7 + scrolled * 2.6;
     camera.position.z = camHome.z + scrolled * 3.2;
-    camera.lookAt(lookAtX, 1.4 - scrolled * 0.6, 0);
+    camera.lookAt(framing.lookX, framing.lookY - scrolled * 0.6, 0);
 
     island.rotation.y = Math.sin(t * 0.06) * 0.14 + 0.25;
     island.position.y = Math.sin(t * 0.35) * 0.06;

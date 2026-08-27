@@ -59,18 +59,20 @@ export function initCoverflow(root){
   function layout(drag = 0){
     const width = root.clientWidth || 1;
     const nudge = (drag / width) * 1.15;
-    // On phones the neighbours have to get out of the way of the active card.
+    // On phones this becomes a one-card slider: the neighbours are pushed
+    // almost off-screen and dimmed, leaving an edge that invites the swipe.
     const narrow = width < 760;
-    const spread = narrow ? 78 : 56;
-    const cutoff = narrow ? 1.4 : 2.2;
+    const spread = narrow ? 94 : 56;
+    const cutoff = narrow ? 1.15 : 2.2;
+    const tilt = narrow ? 12 : 26;
 
     slides.forEach((slide, i) => {
       const off = offsetOf(i) - nudge;
       const abs = Math.abs(off);
-      const depth = -Math.min(abs, 3) * 190;
-      const rotate = clamp(-off * 26, -52, 52);
+      const depth = -Math.min(abs, 3) * (narrow ? 120 : 190);
+      const rotate = clamp(-off * tilt, -52, 52);
       const scale = Math.max(1 - abs * 0.09, 0.62);
-      const opacity = abs > cutoff ? 0 : 1 - Math.min(abs, cutoff) * (narrow ? 0.62 : 0.3);
+      const opacity = abs > cutoff ? 0 : 1 - Math.min(abs, cutoff) * (narrow ? 0.8 : 0.3);
 
       slide.style.transform =
         `translateX(${off * spread}%) translateZ(${depth}px) rotateY(${rotate}deg) scale(${scale})`;
