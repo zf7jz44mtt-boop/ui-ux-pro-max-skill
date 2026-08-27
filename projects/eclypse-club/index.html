@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECLYPSE Club — Discoteca en el Port d'Alcúdia, Mallorca</title>
+<meta name="description" content="ECLYPSE Club: discoteca en el Port d'Alcúdia (Zona Magic). Música electrónica, luz y energía cada sábado. Entradas, reservados y lista.">
+<meta name="theme-color" content="#05050A">
+<meta property="og:title" content="ECLYPSE Club — Cada sábado en el Port d'Alcúdia">
+<meta property="og:description" content="La noche tiene su propio eclipse. Electrónica, luz y energía en Zona Magic, Alcúdia.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  ============================================================================
+  ECLYPSE CLUB — landing page (single file, sin dependencias)
+  ----------------------------------------------------------------------------
+  DATOS VERIFICADOS (fuentes públicas):
+    · Nombre / handle .... ΞCLΨPSΞ — @eclypse_club (Instagram)
+    · Ubicación .......... Av. del Tucán 1, 07400 Port d'Alcúdia, Mallorca
+                           (Zona Magic)
+    · Frecuencia ......... cada sábado
+  DATOS DE EJEMPLO — SUSTITUIR ANTES DE PUBLICAR (marcados con TODO):
+    · Horario exacto, edad mínima y dress code
+    · Fechas, nombres de fiesta y DJs de la sección Agenda
+    · Enlaces de entradas (ticketing), WhatsApp de reservas y email
+    · Contenido de los paneles de "Ambiente" (pensados para fotos reales)
+  ============================================================================
+-->
+<style>
+  /* ---------- TOKENS ---------- */
+  :root{
+    --void:#05050A;
+    --ink:#0B0B14;
+    --surface:#12121F;
+    --surface-2:#191828;
+    --line:rgba(196,181,253,0.14);
+    --text:#F5F3FF;
+    --muted:#A9A6C4;
+    --violet:#8B5CF6;
+    --plasma:#C4B5FD;
+    --corona:#FFC46B;
+    --corona-soft:rgba(255,196,107,0.18);
+    --maxw:1180px;
+    --pad:clamp(20px,5vw,64px);
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    background:var(--void);
+    color:var(--text);
+    font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    font-size:17px;line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--corona);color:#000;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--corona);outline-offset:3px;border-radius:4px;}
+
+  .display{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:0.01em;line-height:0.92;text-transform:uppercase;}
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad);}
+  .eyebrow{
+    font-size:12px;letter-spacing:0.28em;text-transform:uppercase;
+    color:var(--plasma);font-weight:500;
+  }
+  .muted{color:var(--muted);}
+  .skip{
+    position:absolute;left:-9999px;top:0;z-index:200;
+    background:var(--corona);color:#000;padding:12px 18px;font-weight:600;border-radius:0 0 8px 0;
+  }
+  .skip:focus{left:0;}
+
+  /* ---------- GRAIN + STARFIELD ---------- */
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;}
+  .stars{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1px 1px at 78% 12%,rgba(255,255,255,.5),transparent),
+      radial-gradient(1.5px 1.5px at 42% 62%,rgba(196,181,253,.6),transparent),
+      radial-gradient(1px 1px at 88% 74%,rgba(255,255,255,.45),transparent),
+      radial-gradient(1px 1px at 24% 84%,rgba(255,196,107,.5),transparent),
+      radial-gradient(1px 1px at 62% 32%,rgba(255,255,255,.4),transparent);
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    transition:background .35s ease,backdrop-filter .35s ease,border-color .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.nav.solid{
+    background:rgba(5,5,10,.82);
+    backdrop-filter:blur(14px);
+    border-bottom-color:var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin-inline:auto;padding:16px var(--pad);
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.12em;}
+  .brand .disc{
+    width:16px;height:16px;border-radius:50%;background:var(--void);
+    box-shadow:0 0 0 1.5px var(--corona),0 0 14px 2px var(--corona-soft);
+    flex:none;
+  }
+  .nav-links{display:flex;gap:30px;list-style:none;}
+  .nav-links a{
+    text-decoration:none;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-right{display:flex;align-items:center;gap:14px;}
+  .lang{
+    display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
+  }
+  .lang button{
+    background:none;border:0;color:var(--muted);font:inherit;font-size:12px;font-weight:600;
+    letter-spacing:.1em;padding:6px 11px;cursor:pointer;transition:.2s;
+  }
+  .lang button[aria-pressed="true"]{background:var(--plasma);color:#0B0B14;}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:14px 26px;border-radius:999px;text-decoration:none;
+    font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .25s,background .25s,color .25s;
+    white-space:nowrap;
+  }
+  .btn-primary{background:var(--corona);color:#120B02;box-shadow:0 0 0 rgba(255,196,107,0);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(255,196,107,.28);}
+  .btn-ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02);}
+  .btn-ghost:hover{border-color:var(--plasma);background:rgba(139,92,246,.12);transform:translateY(-2px);}
+  .btn-sm{padding:10px 18px;font-size:12px;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:center;z-index:2;padding:120px 0 64px;}
+  .eclipse{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);
+    width:min(78vw,620px);aspect-ratio:1;border-radius:50%;
+    background:var(--void);
+    box-shadow:
+      0 0 0 2px rgba(255,196,107,.85),
+      0 0 60px 8px rgba(255,196,107,.35),
+      0 0 180px 40px rgba(139,92,246,.32),
+      inset 0 0 90px 10px rgba(0,0,0,.9);
+    z-index:-1;
+  }
+  .eclipse::after{
+    content:"";position:absolute;inset:-45%;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(255,196,107,.22),rgba(139,92,246,.28),rgba(255,196,107,.10),rgba(139,92,246,.28),rgba(255,196,107,.22));
+    filter:blur(60px);opacity:.75;z-index:-1;
+    animation:spin 34s linear infinite;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:radial-gradient(120% 80% at 50% 45%,transparent 30%,var(--void) 78%);
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .hero-inner{position:relative;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad);width:100%;text-align:center;}
+  .hero h1{
+    font-size:clamp(44px,10.5vw,132px);margin:22px auto 0;max-width:14ch;
+    text-shadow:0 0 44px rgba(255,196,107,.22);
+  }
+  .hero h1 em{font-style:normal;color:var(--corona);}
+  .hero p.lede{
+    margin:26px auto 0;max-width:60ch;color:var(--muted);font-size:clamp(16px,2vw,19px);
+  }
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px;}
+  .hero-meta{
+    margin-top:52px;display:flex;flex-wrap:wrap;gap:10px 34px;justify-content:center;
+    font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  }
+  .hero-meta span{display:flex;align-items:center;gap:9px;}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--corona);flex:none;}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee{
+    position:relative;z-index:2;border-block:1px solid var(--line);
+    background:linear-gradient(90deg,rgba(139,92,246,.10),rgba(255,196,107,.08));
+    overflow:hidden;padding:16px 0;
+  }
+  .marquee-track{display:flex;gap:0;width:max-content;animation:slide 38s linear infinite;}
+  .marquee-track span{
+    font-family:'Anton',sans-serif;text-transform:uppercase;font-size:clamp(18px,3vw,30px);
+    letter-spacing:.06em;padding-inline:26px;color:rgba(245,243,255,.62);white-space:nowrap;
+  }
+  .marquee-track span b{color:var(--corona);font-weight:400;}
+  @keyframes slide{to{transform:translateX(-50%);}}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative;z-index:2;padding:clamp(68px,9vw,112px) 0;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:52px;}
+  .sec-head h2{font-size:clamp(32px,6vw,64px);max-width:16ch;}
+  .sec-head p{color:var(--muted);max-width:44ch;}
+  .num{color:var(--corona);font-size:12px;letter-spacing:.3em;display:block;margin-bottom:14px;}
+
+  /* ---------- EXPERIENCIA ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+  @media (min-width:1000px){ .grid-3{grid-template-columns:repeat(4,1fr);} }
+  @media (max-width:600px){ .grid-3{grid-template-columns:1fr;} }
+  .card{
+    background:linear-gradient(180deg,var(--surface),var(--ink));
+    border:1px solid var(--line);border-radius:var(--r);padding:30px 26px;
+    transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+  }
+  .card:hover{transform:translateY(-4px);border-color:rgba(255,196,107,.4);box-shadow:0 18px 50px rgba(0,0,0,.55);}
+  .card h3{font-size:19px;font-weight:600;margin:18px 0 10px;letter-spacing:.01em;}
+  .card p{color:var(--muted);font-size:15px;}
+  .ico{width:38px;height:38px;color:var(--corona);}
+
+  /* ---------- AGENDA ---------- */
+  .events{display:flex;flex-direction:column;gap:14px;}
+  .event{
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;
+    background:var(--ink);border:1px solid var(--line);border-radius:var(--r);
+    padding:24px 28px;transition:border-color .3s,background .3s,transform .3s;
+  }
+  .event:hover{border-color:rgba(255,196,107,.45);background:var(--surface);transform:translateX(4px);}
+  .event .date{text-align:center;min-width:82px;}
+  .event .date .d{display:block;font-family:'Anton',sans-serif;font-size:38px;line-height:1;color:var(--corona);}
+  .event .date .m{display:block;margin-top:4px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+  .event h3{font-family:'Anton',sans-serif;font-size:clamp(22px,3.4vw,32px);text-transform:uppercase;letter-spacing:.02em;}
+  .event .line{color:var(--muted);font-size:14px;margin-top:6px;}
+  .tag{
+    display:inline-block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--plasma);margin-right:8px;
+  }
+  .tag.hot{border-color:rgba(255,196,107,.5);color:var(--corona);}
+
+  /* ---------- AMBIENTE (paneles tipo flyer) ---------- */
+  .mosaic{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .tile{
+    position:relative;aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;
+    border:1px solid var(--line);display:flex;align-items:flex-end;padding:24px;
+    background:radial-gradient(90% 70% at 30% 15%,rgba(139,92,246,.42),transparent 60%),
+               radial-gradient(80% 60% at 80% 90%,rgba(255,196,107,.28),transparent 62%),
+               var(--ink);
+    transition:transform .35s ease;
+  }
+  .tile:nth-child(2){background:radial-gradient(85% 65% at 75% 20%,rgba(255,196,107,.35),transparent 60%),radial-gradient(70% 60% at 20% 85%,rgba(139,92,246,.35),transparent 60%),var(--ink);}
+  .tile:nth-child(3){background:radial-gradient(100% 70% at 50% 100%,rgba(139,92,246,.45),transparent 65%),var(--ink);}
+  .tile:nth-child(4){background:radial-gradient(80% 60% at 20% 25%,rgba(255,196,107,.22),transparent 60%),radial-gradient(90% 70% at 90% 75%,rgba(139,92,246,.38),transparent 62%),var(--ink);}
+  .tile:hover{transform:translateY(-6px);}
+  .tile span{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:clamp(20px,2.6vw,28px);line-height:1;}
+  .tile small{display:block;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.18em;color:var(--muted);margin-top:8px;text-transform:uppercase;}
+
+  /* ---------- RESERVADOS ---------- */
+  .vip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+  .vip .card{display:flex;flex-direction:column;}
+  .vip .card.featured{border-color:rgba(255,196,107,.45);background:linear-gradient(180deg,rgba(255,196,107,.09),var(--ink));}
+  .badge{
+    align-self:flex-start;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    background:var(--corona);color:#120B02;border-radius:999px;padding:5px 12px;font-weight:600;margin-bottom:16px;
+  }
+  .vip ul{list-style:none;margin:18px 0 26px;display:flex;flex-direction:column;gap:11px;}
+  .vip li{display:flex;gap:11px;font-size:15px;color:var(--muted);}
+  .vip li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--corona);flex:none;margin-top:9px;}
+  .vip .btn{margin-top:auto;}
+
+  /* ---------- INFO ---------- */
+  .info{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:start;}
+  .info dl{display:grid;grid-template-columns:auto 1fr;gap:18px 26px;margin-top:8px;}
+  .info dt{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--plasma);padding-top:3px;}
+  .info dd{color:var(--text);}
+  .info dd small{display:block;color:var(--muted);font-size:14px;}
+  .map{
+    border:1px solid var(--line);border-radius:var(--r);padding:32px;background:var(--ink);
+    background-image:
+      linear-gradient(rgba(139,92,246,.10) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(139,92,246,.10) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  .map .pin{
+    width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin-bottom:22px;
+    background:rgba(255,196,107,.12);border:1px solid rgba(255,196,107,.45);color:var(--corona);
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:820px;}
+  details{border-bottom:1px solid var(--line);}
+  summary{
+    list-style:none;cursor:pointer;padding:22px 0;display:flex;justify-content:space-between;
+    align-items:center;gap:20px;font-size:clamp(16px,2.2vw,19px);font-weight:500;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";font-family:'Anton',sans-serif;color:var(--corona);font-size:26px;transition:transform .25s;}
+  details[open] summary::after{transform:rotate(45deg);}
+  details p{padding:0 0 24px;color:var(--muted);max-width:70ch;}
+
+  /* ---------- CTA FINAL ---------- */
+  .final{text-align:center;position:relative;overflow:hidden;}
+  .final::before{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:min(90vw,700px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle,rgba(139,92,246,.28),transparent 62%);filter:blur(30px);z-index:-1;
+  }
+  .final h2{font-size:clamp(38px,8vw,90px);}
+  .final .btn{margin-top:34px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:60px 0 40px;position:relative;z-index:2;}
+  .foot-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+  .foot-links{display:flex;gap:26px;flex-wrap:wrap;font-size:14px;}
+  .foot-links a{color:var(--muted);text-decoration:none;transition:color .2s;}
+  .foot-links a:hover{color:var(--corona);}
+  .legal{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--muted);}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---------- RESPONSIVE ---------- */
+  .burger{
+    display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:10px;
+    background:rgba(255,255,255,.03);cursor:pointer;padding:0;place-items:center;gap:5px;
+  }
+  .burger span{display:block;width:18px;height:1.5px;background:var(--text);transition:transform .25s,opacity .25s;}
+  .burger[aria-expanded="true"] span:first-child{transform:translateY(3.25px) rotate(45deg);}
+  .burger[aria-expanded="true"] span:last-child{transform:translateY(-3.25px) rotate(-45deg);}
+  @media (max-width:900px){
+    .info{grid-template-columns:1fr;gap:36px;}
+    .burger{display:grid;}
+    .nav-links{
+      position:fixed;inset:64px 0 auto;flex-direction:column;gap:0;
+      background:rgba(5,5,10,.97);backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);padding:8px var(--pad) 22px;
+      transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;
+    }
+    .nav-links.open{transform:none;opacity:1;pointer-events:auto;}
+    .nav-links a{display:block;padding:16px 0;border-bottom:1px solid var(--line);font-size:15px;}
+    .nav-links .menu-cta a{color:var(--corona);border-bottom:0;}
+    .nav-cta{display:none;}
+    .nav-inner{padding-inline:clamp(16px,5vw,32px);}
+  }
+  @media (min-width:901px){ .menu-cta{display:none;} }
+  @media (max-width:620px){
+    body{font-size:16px;}
+    .event{grid-template-columns:auto 1fr;gap:18px;}
+    .event .btn{grid-column:1/-1;width:100%;}
+    .event .date{min-width:64px;}
+    .hero-meta{gap:8px 20px;font-size:12px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+    .reveal{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
+
+<div class="stars" aria-hidden="true"></div>
+<svg class="grain" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="ECLYPSE Club, inicio">
+      <span class="disc" aria-hidden="true"></span>ECLYPSE
+    </a>
+    <nav aria-label="Principal">
+      <ul class="nav-links" id="menu">
+        <li><a href="#experiencia" data-en="Experience">Experiencia</a></li>
+        <li><a href="#agenda" data-en="Line-up">Agenda</a></li>
+        <li><a href="#reservados" data-en="Tables">Reservados</a></li>
+        <li><a href="#info" data-en="Find us">Cómo llegar</a></li>
+        <li class="menu-cta"><a href="#agenda" data-en="Tickets">Entradas</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </button>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" id="lang-es" aria-pressed="true">ES</button>
+        <button type="button" id="lang-en" aria-pressed="false">EN</button>
+      </div>
+      <!-- TODO: enlazar con la plataforma real de entradas -->
+      <a class="btn btn-primary btn-sm nav-cta" href="#agenda" data-en="Tickets">Entradas</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!-- ============================ HERO ============================ -->
+<div id="top"></div>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="eclipse" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="eyebrow" data-en="Port d'Alcúdia · Mallorca">Port d'Alcúdia · Mallorca</p>
+    <h1 class="display" id="hero-title" data-en="The night has its own <em>eclipse</em>">La noche tiene su propio <em>eclipse</em></h1>
+    <p class="lede" data-en="Electronic music, light and energy in the heart of Zona Magic. Every Saturday the sun goes out in Port d'Alcúdia — and ECLYPSE lights up.">Música electrónica, luz y energía en el corazón de Zona Magic. Cada sábado el sol se apaga en el Port d'Alcúdia y ECLYPSE se enciende.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#agenda" data-en="Buy tickets">Comprar entradas</a>
+      <a class="btn btn-ghost" href="#reservados" data-en="Book a table">Reservar mesa</a>
+    </div>
+    <div class="hero-meta">
+      <span><i class="dot" aria-hidden="true"></i><span data-en="Every Saturday">Cada sábado</span></span>
+      <!-- TODO: confirmar horario real de apertura y cierre -->
+      <span><i class="dot" aria-hidden="true"></i><span data-en="23:30 – 06:00">23:30 – 06:00</span></span>
+      <span><i class="dot" aria-hidden="true"></i><span data-en="18+ with ID">+18 con DNI</span></span>
+      <span><i class="dot" aria-hidden="true"></i><span data-en="Av. del Tucán 1">Av. del Tucán 1</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ MARQUEE ============================ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>House <b>·</b> Tech House <b>·</b> Reggaeton <b>·</b> Saturdays only <b>·</b> Zona Magic <b>·</b> Eclypse <b>·</b></span>
+    <span>House <b>·</b> Tech House <b>·</b> Reggaeton <b>·</b> Saturdays only <b>·</b> Zona Magic <b>·</b> Eclypse <b>·</b></span>
+  </div>
+</div>
+
+<!-- ============================ EXPERIENCIA ============================ -->
+<section id="experiencia" aria-labelledby="exp-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num" data-en="01 — Experience">01 — Experiencia</span>
+        <h2 class="display" id="exp-title" data-en="Not a night out. A total eclipse.">No es una noche más. Es un eclipse total.</h2>
+      </div>
+      <p data-en="Sound, light and crowd tuned to the same frequency, from the first drop until the sun comes back.">Sonido, luz y gente en la misma frecuencia, desde el primer drop hasta que vuelve a salir el sol.</p>
+    </div>
+    <div class="grid-3">
+      <article class="card reveal">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12v-1a9 9 0 0 1 18 0v1"/><rect x="2" y="12" width="5" height="8" rx="2"/><rect x="17" y="12" width="5" height="8" rx="2"/></svg>
+        <h3 data-en="Sound that hits">Sonido que se siente</h3>
+        <p data-en="A system tuned for the room: clean highs, bass you feel in your chest and no fatigue at 4am.">Sistema calibrado para la sala: agudos limpios, graves que se sienten en el pecho y cero fatiga a las 4 de la mañana.</p>
+      </article>
+      <article class="card reveal">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+        <h3 data-en="Light &amp; laser show">Luz y láser</h3>
+        <p data-en="Beams, strobes and haze choreographed live with the set. Every hour of the night looks different.">Cañones, estrobos y humo sincronizados en directo con el set. Cada hora de la noche se ve distinta.</p>
+      </article>
+      <article class="card reveal">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg>
+        <h3 data-en="Terrace &amp; chill zone">Terraza y zona chill</h3>
+        <p data-en="Step outside, breathe the Mediterranean air, hear yourself talk — then go back in.">Sal, respira aire del Mediterráneo, escúchate hablar y vuelve a entrar cuando quieras.</p>
+      </article>
+      <article class="card reveal">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 3h14l-1 6a6 6 0 0 1-12 0z"/><path d="M12 15v6M8 21h8"/></svg>
+        <h3 data-en="Tables &amp; bottle service">Reservados y botella</h3>
+        <p data-en="Your own space next to the floor, personal service and no queue at the bar.">Tu espacio junto a la pista, servicio personal y cero cola en la barra.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ AGENDA ============================ -->
+<!-- TODO: sustituir fechas, nombres de fiesta, line-up y enlaces de entradas -->
+<section id="agenda" aria-labelledby="agenda-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num" data-en="02 — Line-up">02 — Agenda</span>
+        <h2 class="display" id="agenda-title" data-en="Next Saturdays">Próximos sábados</h2>
+      </div>
+      <p data-en="Doors at 23:30. Advance tickets are always cheaper than the door — and the good tables go first.">Puertas a las 23:30. La entrada anticipada siempre sale mejor de precio que en taquilla, y los mejores reservados vuelan.</p>
+    </div>
+    <div class="events">
+      <article class="event reveal">
+        <div class="date"><span class="d">29</span><span class="m" data-en="Aug">Ago</span></div>
+        <div>
+          <h3>Total Eclypse</h3>
+          <p class="line"><span class="tag hot" data-en="Last tickets">Últimas entradas</span><span class="tag">House · Tech House</span></p>
+          <p class="line" data-en="Resident DJs + guest · 23:30 – 06:00">DJs residentes + invitado · 23:30 – 06:00</p>
+        </div>
+        <a class="btn btn-primary btn-sm" href="#reservados" data-en="Tickets">Entradas</a>
+      </article>
+      <article class="event reveal">
+        <div class="date"><span class="d">05</span><span class="m" data-en="Sep">Sep</span></div>
+        <div>
+          <h3>Luna Negra</h3>
+          <p class="line"><span class="tag">Reggaeton · Latin</span><span class="tag" data-en="Free before 00:30">Gratis antes de 00:30</span></p>
+          <p class="line" data-en="Special guest set · 23:30 – 06:00">Set de artista invitado · 23:30 – 06:00</p>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="#reservados" data-en="Tickets">Entradas</a>
+      </article>
+      <article class="event reveal">
+        <div class="date"><span class="d">12</span><span class="m" data-en="Sep">Sep</span></div>
+        <div>
+          <h3>Closing Party</h3>
+          <p class="line"><span class="tag hot" data-en="End of season">Fin de temporada</span><span class="tag">All night long</span></p>
+          <p class="line" data-en="The last eclipse of the summer · 23:30 – late">El último eclipse del verano · 23:30 – cierre</p>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="#reservados" data-en="Tickets">Entradas</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ AMBIENTE ============================ -->
+<!-- Paneles decorativos: sustituir cada .tile por una foto real de la sala
+     (<img src="..." alt="...">) manteniendo el aspect-ratio 3/4. -->
+<section id="ambiente" aria-labelledby="amb-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num" data-en="03 — Inside">03 — Ambiente</span>
+        <h2 class="display" id="amb-title" data-en="Four rooms of the same night">Cuatro caras de la misma noche</h2>
+      </div>
+    </div>
+    <div class="mosaic reveal">
+      <div class="tile"><p><span data-en="Main floor">Pista central</span><small data-en="Where the drop lands">Donde cae el drop</small></p></div>
+      <div class="tile"><p><span data-en="The booth">La cabina</span><small data-en="Residents &amp; guests">Residentes e invitados</small></p></div>
+      <div class="tile"><p><span data-en="VIP area">Zona VIP</span><small data-en="Your own view">Tu propio palco</small></p></div>
+      <div class="tile"><p><span data-en="Terrace">Terraza</span><small data-en="Air, talk, repeat">Aire, conversación, repetir</small></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RESERVADOS ============================ -->
+<!-- TODO: confirmar contenido de cada reservado y sustituir el enlace de WhatsApp -->
+<section id="reservados" aria-labelledby="vip-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num" data-en="04 — Tables">04 — Reservados</span>
+        <h2 class="display" id="vip-title" data-en="Your table, your night">Tu mesa, tu noche</h2>
+      </div>
+      <p data-en="Tell us the date and how many you are; we reply with availability and the final price. No surprises at the door.">Dinos la fecha y cuántos sois y te respondemos con disponibilidad y precio cerrado. Sin sorpresas en la puerta.</p>
+    </div>
+    <div class="vip">
+      <article class="card reveal">
+        <h3 data-en="Standard table">Mesa Standard</h3>
+        <p class="muted" data-en="Up to 6 people">Hasta 6 personas</p>
+        <ul>
+          <li data-en="Priority entry for the group">Entrada prioritaria para el grupo</li>
+          <li data-en="Reserved table next to the floor">Mesa reservada junto a la pista</li>
+          <li data-en="1 bottle + mixers">1 botella + refrescos</li>
+        </ul>
+        <a class="btn btn-ghost" href="#contacto" data-en="Check availability">Consultar disponibilidad</a>
+      </article>
+      <article class="card featured reveal">
+        <span class="badge" data-en="Most booked">Más reservado</span>
+        <h3 data-en="Premium table">Mesa Premium</h3>
+        <p class="muted" data-en="Up to 10 people">Hasta 10 personas</p>
+        <ul>
+          <li data-en="Skip the queue, all night">Sin cola, toda la noche</li>
+          <li data-en="Front-row table with the best view">Mesa en primera línea con la mejor vista</li>
+          <li data-en="2 bottles + mixers">2 botellas + refrescos</li>
+          <li data-en="Dedicated host">Camarero dedicado</li>
+        </ul>
+        <a class="btn btn-primary" href="#contacto" data-en="Check availability">Consultar disponibilidad</a>
+      </article>
+      <article class="card reveal">
+        <h3 data-en="VIP area">Zona VIP</h3>
+        <p class="muted" data-en="Groups of 10+ and private events">Grupos de 10+ y eventos privados</p>
+        <ul>
+          <li data-en="Private area with its own service">Zona privada con servicio propio</li>
+          <li data-en="Custom bottle package">Pack de botellas a medida</li>
+          <li data-en="Birthdays, hen &amp; stag parties, companies">Cumpleaños, despedidas y empresas</li>
+        </ul>
+        <a class="btn btn-ghost" href="#contacto" data-en="Request a quote">Pedir presupuesto</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ INFO ============================ -->
+<section id="info" aria-labelledby="info-title">
+  <div class="wrap">
+    <div class="info">
+      <div class="reveal">
+        <span class="num" data-en="05 — Find us">05 — Cómo llegar</span>
+        <h2 class="display" id="info-title" data-en="Zona Magic, Port d'Alcúdia">Zona Magic, Port d'Alcúdia</h2>
+        <dl>
+          <dt data-en="Address">Dirección</dt>
+          <dd>Av. del Tucán 1, 07400 Alcúdia<small data-en="Illes Balears, Spain — Zona Magic">Illes Balears, España — Zona Magic</small></dd>
+          <!-- TODO: confirmar horario -->
+          <dt data-en="Hours">Horario</dt>
+          <dd data-en="Saturdays, 23:30 – 06:00"><span>Sábados, 23:30 – 06:00</span></dd>
+          <!-- TODO: confirmar edad mínima y política de acceso -->
+          <dt data-en="Age">Edad</dt>
+          <dd data-en="18+ — ID required at the door">+18 — DNI o pasaporte en la puerta</dd>
+          <!-- TODO: confirmar dress code -->
+          <dt data-en="Dress code">Dress code</dt>
+          <dd data-en="Smart casual. No beachwear, no flip-flops.">Smart casual. Sin ropa de playa ni chanclas.</dd>
+          <dt data-en="Getting here">Llegar</dt>
+          <dd data-en="10 min walk from the marina · taxi rank at the door · street parking nearby">A 10 min andando del puerto deportivo · parada de taxis en la puerta · aparcamiento en la zona</dd>
+        </dl>
+      </div>
+      <div class="map reveal">
+        <div class="pin" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        </div>
+        <h3 class="display" style="font-size:28px" data-en="See it on the map">Míralo en el mapa</h3>
+        <p class="muted" style="margin:12px 0 24px" data-en="Right in the middle of Zona Magic, the nightlife strip of Port d'Alcúdia. If you can hear it, you're close.">En pleno corazón de la Zona Magic, la calle de la noche del Port d'Alcúdia. Si lo oyes, ya estás cerca.</p>
+        <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Avinguda+del+Tuc%C3%A1n+1%2C+07400+Alc%C3%BAdia" target="_blank" rel="noopener" data-en="Open in Google Maps">Abrir en Google Maps</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num" data-en="06 — FAQ">06 — FAQ</span>
+        <h2 class="display" id="faq-title" data-en="Before you come">Antes de venir</h2>
+      </div>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary data-en="What time should I get there?">¿A qué hora conviene llegar?</summary>
+        <p data-en="Doors open at 23:30. Between 00:00 and 01:00 is when the room fills up, so come earlier if you want to skip the queue.">Abrimos a las 23:30. Entre las 00:00 y la 01:00 es cuando se llena la sala, así que ven antes si quieres evitar la cola.</p>
+      </details>
+      <details>
+        <summary data-en="Do I need to buy a ticket in advance?">¿Hace falta comprar la entrada por adelantado?</summary>
+        <p data-en="Not always, but on special nights we sell out. Advance tickets are cheaper and give you a faster lane at the door.">No siempre, pero en las noches especiales colgamos el cartel de completo. La anticipada sale más barata y te da acceso más rápido en puerta.</p>
+      </details>
+      <details>
+        <summary data-en="Can I book a table for a birthday or a stag/hen party?">¿Puedo reservar mesa para un cumpleaños o una despedida?</summary>
+        <p data-en="Yes. Write to us with the date and the size of the group and we will put together a package for you.">Sí. Escríbenos con la fecha y el número de personas y te preparamos un pack a medida.</p>
+      </details>
+      <details>
+        <summary data-en="Is there a dress code?">¿Hay dress code?</summary>
+        <p data-en="Smart casual. No beachwear, football shirts or flip-flops. The door has the final word.">Smart casual. Sin ropa de playa, camisetas de fútbol ni chanclas. La última palabra la tiene la puerta.</p>
+      </details>
+      <details>
+        <summary data-en="Where can I see the line-up for each Saturday?">¿Dónde veo el line-up de cada sábado?</summary>
+        <p data-en="On this page, in the line-up section, and every week on our Instagram @eclypse_club.">En esta página, en la sección de agenda, y cada semana en nuestro Instagram @eclypse_club.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CTA FINAL ============================ -->
+<section class="final" id="contacto" aria-labelledby="final-title">
+  <div class="wrap">
+    <p class="eyebrow reveal" data-en="Saturday is waiting">El sábado te espera</p>
+    <h2 class="display reveal" id="final-title" data-en="See you under the eclipse">Nos vemos bajo el eclipse</h2>
+    <p class="muted reveal" style="max-width:52ch;margin:22px auto 0" data-en="Tables, guest list and private events: write to us and we reply the same day.">Reservados, lista y eventos privados: escríbenos y te contestamos el mismo día.</p>
+    <div class="hero-cta reveal">
+      <!-- TODO: sustituir por el número real de reservas -->
+      <a class="btn btn-primary" href="https://wa.me/34600000000?text=Hola%20ECLYPSE%2C%20quiero%20reservar" target="_blank" rel="noopener" data-en="WhatsApp reservations">Reservar por WhatsApp</a>
+      <a class="btn btn-ghost" href="https://www.instagram.com/eclypse_club/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top"><span class="disc" aria-hidden="true"></span>ECLYPSE</a>
+        <p class="muted" style="margin-top:12px;font-size:14px" data-en="Av. del Tucán 1 · Port d'Alcúdia · Mallorca">Av. del Tucán 1 · Port d'Alcúdia · Mallorca</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#agenda" data-en="Line-up">Agenda</a>
+        <a href="#reservados" data-en="Tables">Reservados</a>
+        <a href="#info" data-en="Find us">Cómo llegar</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://www.instagram.com/eclypse_club/" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+    </div>
+    <div class="legal">
+      <span data-en="© 2026 ECLYPSE Club. All rights reserved.">© 2026 ECLYPSE Club. Todos los derechos reservados.</span>
+      <!-- TODO: enlazar páginas legales reales -->
+      <span class="foot-links"><a href="#" data-en="Legal notice">Aviso legal</a><a href="#" data-en="Privacy">Privacidad</a><a href="#" data-en="Cookies">Cookies</a></span>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"NightClub",
+  "name":"ECLYPSE Club",
+  "url":"https://www.instagram.com/eclypse_club/",
+  "sameAs":["https://www.instagram.com/eclypse_club/"],
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"Avinguda del Tucán 1",
+    "addressLocality":"Alcúdia",
+    "postalCode":"07400",
+    "addressRegion":"Illes Balears",
+    "addressCountry":"ES"
+  },
+  "openingHoursSpecification":[{
+    "@type":"OpeningHoursSpecification",
+    "dayOfWeek":"Saturday",
+    "opens":"23:30",
+    "closes":"06:00"
+  }]
+}
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* --- nav background on scroll --- */
+  var nav = document.getElementById('nav');
+  var onScroll = function(){ nav.classList.toggle('solid', window.scrollY > 24); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* --- scroll reveal (se salta si el usuario pide menos movimiento) --- */
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = document.querySelectorAll('.reveal');
+  if (reduced || !('IntersectionObserver' in window)) {
+    items.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {rootMargin:'0px 0px -12% 0px', threshold:0.12});
+    items.forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(el); });
+  }
+
+  /* --- menú móvil --- */
+  var burger = document.getElementById('burger');
+  var menu = document.getElementById('menu');
+  var closeMenu = function(){ menu.classList.remove('open'); burger.setAttribute('aria-expanded','false'); };
+  burger.addEventListener('click', function(){
+    var open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  menu.addEventListener('click', function(e){ if (e.target.tagName === 'A') closeMenu(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+
+  /* --- ES / EN --- */
+  var nodes = document.querySelectorAll('[data-en]');
+  var btnEs = document.getElementById('lang-es');
+  var btnEn = document.getElementById('lang-en');
+  nodes.forEach(function(el){ el.dataset.es = el.innerHTML; });
+
+  function setLang(lang){
+    nodes.forEach(function(el){ el.innerHTML = (lang === 'en') ? el.dataset.en : el.dataset.es; });
+    document.documentElement.lang = lang;
+    btnEs.setAttribute('aria-pressed', String(lang === 'es'));
+    btnEn.setAttribute('aria-pressed', String(lang === 'en'));
+    try { localStorage.setItem('eclypse-lang', lang); } catch (err) {}
+  }
+
+  btnEs.addEventListener('click', function(){ setLang('es'); });
+  btnEn.addEventListener('click', function(){ setLang('en'); });
+
+  var saved;
+  try { saved = localStorage.getItem('eclypse-lang'); } catch (err) {}
+  if (!saved && (navigator.language || '').slice(0,2) !== 'es') { saved = 'en'; }
+  if (saved === 'en') { setLang('en'); }
+})();
+</script>
+</body>
+</html>
