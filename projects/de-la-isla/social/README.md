@@ -12,6 +12,7 @@ node export.mjs --feed     # 12 piezas del perfil: dist/feed/*-1080x1080.png
 node export.mjs --brand    # foto de perfil y portadas: dist/perfil/*.png
 python3 build-profile.py   # maqueta del perfil: dist/profile.html
 python3 build-cuenta.py    # kit para abrir la cuenta: dist/cuenta.html
+python3 build-post1.py     # primera publicación: dist/post-01.html
 ```
 
 `carousel.html` también se puede abrir en el navegador: se ve la maqueta a
@@ -28,6 +29,9 @@ escala. El exportador quita esa escala antes de capturar.
 - `brand-kit.html` — la foto de perfil (1080 × 1080, en versión oscura y en
   papel) y las cuatro portadas de destacados (1080 × 1920). La foto es solo la
   marca: a 32 píxeles no se lee ningún texto.
+- `build-post1.py` — monta `dist/post-01.html`: la primera publicación con su
+  pie de foto, el texto alternativo de cada diapositiva, el primer comentario,
+  la biografía y los diez pasos de publicación.
 - `build-cuenta.py` — monta `dist/cuenta.html`: los textos exactos de cada
   campo del perfil (nombre, usuario, categoría, tres bios con su contador de
   caracteres), las portadas, el orden de las nueve primeras publicaciones y una

@@ -68,8 +68,12 @@ await page.waitForTimeout(400);
 await mkdir(join(outDir, 'feed'), { recursive: true });
 await mkdir(join(outDir, 'perfil'), { recursive: true });
 const suffix = square ? '-1080x1080' : '-1080x1350';
-for (const stale of await readdir(outDir).catch(() => [])){
-  if (stale.endsWith(`${suffix}.png`)) await unlink(join(outDir, stale));
+if (!feed && !brand){
+  // Solo en modo carrusel: en --feed y --brand este barrido borraba los PNG
+  // del carrusel, que viven en la misma carpeta y comparten sufijo.
+  for (const stale of await readdir(outDir).catch(() => [])){
+    if (stale.endsWith(`${suffix}.png`)) await unlink(join(outDir, stale));
+  }
 }
 
 // Guard: a slide whose content is taller than the frame silently loses its
