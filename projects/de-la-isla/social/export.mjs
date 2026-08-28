@@ -21,6 +21,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright/index.js')
 const root = dirname(fileURLToPath(import.meta.url));
 const square = process.argv.includes('--square');
 const feed = process.argv.includes('--feed');   // 12 piezas cuadradas del perfil
+const brand = process.argv.includes('--brand'); // foto de perfil y portadas de destacados
 const outDir = resolve(root, 'dist');
 
 const MIME = {
@@ -50,7 +51,8 @@ const { port } = server.address();
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1240, height: 1500 }, deviceScaleFactor: 1 });
-await page.goto(`http://127.0.0.1:${port}/${feed ? 'feed.html' : 'carousel.html'}`, { waitUntil: 'load' });
+const pagina = brand ? 'brand-kit.html' : feed ? 'feed.html' : 'carousel.html';
+await page.goto(`http://127.0.0.1:${port}/${pagina}`, { waitUntil: 'load' });
 
 await page.evaluate((isSquare) => {
   document.body.classList.remove('preview');
@@ -64,6 +66,7 @@ await page.evaluate(() => Promise.all(
 await page.waitForTimeout(400);
 
 await mkdir(join(outDir, 'feed'), { recursive: true });
+await mkdir(join(outDir, 'perfil'), { recursive: true });
 const suffix = square ? '-1080x1080' : '-1080x1350';
 for (const stale of await readdir(outDir).catch(() => [])){
   if (stale.endsWith(`${suffix}.png`)) await unlink(join(outDir, stale));
@@ -81,12 +84,19 @@ const overflow = await page.evaluate((sel) => Array.from(document.querySelectorA
   const last = inFlow[inFlow.length - 1];
   const bottom = last ? last.getBoundingClientRect().bottom : box.bottom;
   return { slide: i + 1, overflowPx: Math.round(Math.max(0, bottom - (box.bottom - padBottom))) };
-}), feed ? '.tile' : '.slide');
+}), brand ? '.nothing' : feed ? '.tile' : '.slide');
 for (const o of overflow){
   if (o.overflowPx > 0) console.warn(`  aviso: slide ${o.slide} se sale ${o.overflowPx}px del marco`);
 }
 
-if (feed){
+if (brand){
+  const pieces = await page.locator('[data-name]').all();
+  for (const piece of pieces){
+    const name = `${await piece.getAttribute('data-name')}.png`;
+    await piece.screenshot({ path: join(outDir, 'perfil', name) });
+    console.log(`dist/perfil/${name}`);
+  }
+} else if (feed){
   const tiles = await page.locator('.tile').all();
   for (const tile of tiles){
     const name = `${await tile.getAttribute('data-name')}-1080x1080.png`;

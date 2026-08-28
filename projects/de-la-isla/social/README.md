@@ -9,7 +9,9 @@ reales del sitio, no imágenes de stock.
 node export.mjs            # carrusel: dist/*-1080x1350.png  (4:5, formato de feed)
 node export.mjs --square   # carrusel: dist/*-1080x1080.png  (cuadrado)
 node export.mjs --feed     # 12 piezas del perfil: dist/feed/*-1080x1080.png
+node export.mjs --brand    # foto de perfil y portadas: dist/perfil/*.png
 python3 build-profile.py   # maqueta del perfil: dist/profile.html
+python3 build-cuenta.py    # kit para abrir la cuenta: dist/cuenta.html
 ```
 
 `carousel.html` también se puede abrir en el navegador: se ve la maqueta a
@@ -23,6 +25,13 @@ escala. El exportador quita esa escala antes de capturar.
 - `build-profile.py` — monta `dist/profile.html`: la maqueta del perfil de
   Instagram con las doce piezas incrustadas, para enseñar cómo quedaría la
   cuenta antes de publicar nada.
+- `brand-kit.html` — la foto de perfil (1080 × 1080, en versión oscura y en
+  papel) y las cuatro portadas de destacados (1080 × 1920). La foto es solo la
+  marca: a 32 píxeles no se lee ningún texto.
+- `build-cuenta.py` — monta `dist/cuenta.html`: los textos exactos de cada
+  campo del perfil (nombre, usuario, categoría, tres bios con su contador de
+  caracteres), las portadas, el orden de las nueve primeras publicaciones y una
+  checklist de montaje.
 
 ## Las cinco diapositivas
 
