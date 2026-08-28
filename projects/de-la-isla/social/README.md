@@ -6,12 +6,23 @@ Inter + JetBrains Mono. Los mockups de móvil y el antes/después son capturas
 reales del sitio, no imágenes de stock.
 
 ```
-node export.mjs            # dist/*-1080x1350.png  (4:5, formato de feed)
-node export.mjs --square   # dist/*-1080x1080.png  (cuadrado)
+node export.mjs            # carrusel: dist/*-1080x1350.png  (4:5, formato de feed)
+node export.mjs --square   # carrusel: dist/*-1080x1080.png  (cuadrado)
+node export.mjs --feed     # 12 piezas del perfil: dist/feed/*-1080x1080.png
+python3 build-profile.py   # maqueta del perfil: dist/profile.html
 ```
 
 `carousel.html` también se puede abrir en el navegador: se ve la maqueta a
 escala. El exportador quita esa escala antes de capturar.
+
+## Qué hay aquí
+
+- `carousel.html` — las cinco diapositivas del carrusel.
+- `feed.html` — doce piezas sueltas (consejos, casos, precios, reel, marca) que
+  llenan la primera pantalla del perfil.
+- `build-profile.py` — monta `dist/profile.html`: la maqueta del perfil de
+  Instagram con las doce piezas incrustadas, para enseñar cómo quedaría la
+  cuenta antes de publicar nada.
 
 ## Las cinco diapositivas
 
@@ -22,6 +33,13 @@ escala. El exportador quita esa escala antes de capturar.
 | 03 | Antes y después | Prueba: la misma web antes y ahora, con tres números. |
 | 04 | Planes | Precios claros, sin permanencia. |
 | 05 | Contacto | La llamada a la acción y por dónde escribir. |
+
+## Las doce piezas del perfil
+
+Se alternan tres fondos —tinta de mar, papel y latón— para que ninguna fila de
+la cuadrícula quede plana, y se reparten en cinco tipos: consejo o lista (4),
+prueba (3), marca (2), servicio (2) y oferta (1). La maqueta del perfil explica
+el sistema pieza a pieza.
 
 ## Antes de publicar
 

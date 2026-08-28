@@ -1,0 +1,126 @@
+/* ==========================================================================
+   feed.css — 12 piezas cuadradas (1080 x 1080) para el perfil de Instagram.
+   Mismos tokens que la web y que el carrusel: el objetivo es que la
+   cuadrícula se lea como una sola pieza.
+   ========================================================================== */
+@import url('assets/fonts.css');
+
+:root{
+  --sea-900:#07191F; --sea-800:#0B242D; --sea-700:#10333E;
+  --teal:#2F8A87; --gold:#D8A657; --gold-soft:#E8C68B; --terracotta:#C4643C;
+  --sand:#F3EADA; --sand-dim:rgba(243,234,218,.74); --sand-faint:rgba(243,234,218,.5);
+  --paper:#FBF7EF; --ink-dim:rgba(7,25,31,.72); --ink-faint:rgba(7,25,31,.5);
+  --line:rgba(243,234,218,.16); --line-ink:rgba(7,25,31,.14);
+  --display:'Playfair Display', Georgia, serif;
+  --body:'Inter', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{
+  margin:0; background:#181818; padding:36px;
+  display:grid; grid-template-columns:repeat(3, 1080px); gap:24px;
+  font-family:var(--body);
+}
+
+.tile{
+  position:relative; width:1080px; height:1080px; overflow:hidden;
+  padding:84px; display:flex; flex-direction:column;
+  background:var(--sea-900); color:var(--sand);
+  font-size:30px; line-height:1.45;
+}
+.tile--paper{ background:var(--paper); color:var(--sea-900); }
+.tile--gold{ background:linear-gradient(150deg,#E0AF61,#C88A3F); color:#20160A; }
+.tile--photo{ padding:0; }
+
+.tile .spacer{ flex:1; }
+.mark{ position:absolute; right:64px; bottom:56px; z-index:4; opacity:.85; }
+.mark svg{ width:60px; height:60px; display:block; }
+
+.eyebrow{
+  font-family:var(--mono); font-size:22px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); display:flex; align-items:center; gap:16px; margin:0;
+}
+.eyebrow::before{ content:""; width:38px; height:3px; background:currentColor; }
+.tile--paper .eyebrow{ color:var(--terracotta); }
+.tile--gold .eyebrow{ color:rgba(32,22,10,.75); }
+
+h2{
+  font-family:var(--display); font-weight:500; margin:0;
+  font-size:82px; line-height:1.04; letter-spacing:-.02em;
+}
+h2.sm{ font-size:66px; }
+h2 em{ font-style:italic; color:var(--gold); }
+.tile--paper h2 em{ color:var(--terracotta); }
+p.lead{ margin:0; font-size:30px; color:var(--sand-dim); max-width:24ch; }
+.tile--paper p.lead{ color:var(--ink-dim); }
+.tile--gold p.lead{ color:rgba(32,22,10,.8); }
+
+.foot{
+  font-family:var(--mono); font-size:21px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--sand-faint);
+}
+.tile--paper .foot{ color:var(--ink-faint); }
+.tile--gold .foot{ color:rgba(32,22,10,.7); }
+
+/* listas numeradas */
+.list{ display:flex; flex-direction:column; gap:26px; counter-reset:n; }
+.item{ display:flex; gap:24px; align-items:flex-start; counter-increment:n; }
+.item::before{
+  content:counter(n, decimal-leading-zero);
+  font-family:var(--mono); font-size:22px; color:var(--gold);
+  border:2px solid currentColor; border-radius:999px; padding:8px 14px; flex:none;
+}
+.tile--paper .item::before{ color:var(--terracotta); }
+.item b{ font-weight:600; font-size:32px; display:block; }
+.item span{ font-size:26px; color:var(--ink-faint); }
+.tile:not(.tile--paper) .item span{ color:var(--sand-faint); }
+
+/* cita */
+.quote{ font-family:var(--display); font-size:76px; line-height:1.12; letter-spacing:-.02em; }
+.quote span{ font-style:italic; }
+
+/* dato grande */
+.big{ font-family:var(--display); font-size:172px; line-height:.92; color:var(--gold); letter-spacing:-.03em; }
+.tile--paper .big{ color:var(--terracotta); }
+
+/* precio */
+.pricerow{ display:flex; align-items:baseline; gap:18px; }
+.pricerow b{ font-family:var(--display); font-weight:500; font-size:120px; line-height:1; color:var(--terracotta); }
+.pricerow span{ font-family:var(--mono); font-size:26px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); }
+
+/* fotografía / captura */
+.tile--photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.tile--photo .veil{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(7,25,31,.86) 0%, rgba(7,25,31,.24) 46%, rgba(7,25,31,.88) 100%);
+}
+.tile--photo .inner{ position:relative; z-index:3; padding:84px; display:flex; flex-direction:column; height:100%; }
+
+/* portada de reel */
+.play{
+  width:120px; height:120px; border-radius:50%; border:4px solid var(--gold);
+  display:grid; place-items:center; color:var(--gold);
+}
+.play svg{ width:48px; height:48px; margin-left:8px; }
+
+/* comparativa */
+.compare-strip{ display:grid; grid-template-columns:1fr 1fr; gap:0; border-radius:20px; overflow:hidden; border:3px solid rgba(216,166,87,.4); }
+.compare-strip img{ width:100%; display:block; }
+
+/* chips */
+.chips{ display:flex; flex-wrap:wrap; gap:14px; }
+.chips span{
+  font-family:var(--mono); font-size:22px; letter-spacing:.1em; text-transform:uppercase;
+  border:2px solid var(--line); border-radius:999px; padding:12px 22px; color:var(--sand-dim);
+}
+.tile--paper .chips span{ border-color:var(--line-ink); color:var(--ink-dim); }
+
+/* fondo */
+.glow{ position:absolute; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(216,166,87,.32), rgba(216,166,87,0) 68%); }
+.dots{ position:absolute; pointer-events:none; opacity:.45;
+  background-image:radial-gradient(rgba(243,234,218,.34) 2.5px, transparent 2.5px); background-size:26px 26px; }
+.tile--paper .dots{ background-image:radial-gradient(rgba(7,25,31,.16) 2.5px, transparent 2.5px); }
+.wave{ position:absolute; left:0; right:0; bottom:0; pointer-events:none; }
+
+body.preview .tile{ transform:scale(.3); transform-origin:top left; }

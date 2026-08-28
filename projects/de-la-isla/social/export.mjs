@@ -20,6 +20,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright/index.js')
 
 const root = dirname(fileURLToPath(import.meta.url));
 const square = process.argv.includes('--square');
+const feed = process.argv.includes('--feed');   // 12 piezas cuadradas del perfil
 const outDir = resolve(root, 'dist');
 
 const MIME = {
@@ -49,7 +50,7 @@ const { port } = server.address();
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1240, height: 1500 }, deviceScaleFactor: 1 });
-await page.goto(`http://127.0.0.1:${port}/carousel.html`, { waitUntil: 'load' });
+await page.goto(`http://127.0.0.1:${port}/${feed ? 'feed.html' : 'carousel.html'}`, { waitUntil: 'load' });
 
 await page.evaluate((isSquare) => {
   document.body.classList.remove('preview');
@@ -62,7 +63,7 @@ await page.evaluate(() => Promise.all(
 ));
 await page.waitForTimeout(400);
 
-await mkdir(outDir, { recursive: true });
+await mkdir(join(outDir, 'feed'), { recursive: true });
 const suffix = square ? '-1080x1080' : '-1080x1350';
 for (const stale of await readdir(outDir).catch(() => [])){
   if (stale.endsWith(`${suffix}.png`)) await unlink(join(outDir, stale));
@@ -72,7 +73,7 @@ for (const stale of await readdir(outDir).catch(() => [])){
 // footer in the export, so report it instead of shipping a cropped post.
 // Mockups are absolutely positioned and may bleed past the frame on purpose,
 // so only in-flow content counts towards the overflow check.
-const overflow = await page.evaluate(() => Array.from(document.querySelectorAll('.slide')).map((s, i) => {
+const overflow = await page.evaluate((sel) => Array.from(document.querySelectorAll(sel)).map((s, i) => {
   const box = s.getBoundingClientRect();
   const padBottom = parseFloat(getComputedStyle(s).paddingBottom);
   const inFlow = Array.from(s.children).filter((c) => getComputedStyle(c).position === 'static'
@@ -80,17 +81,26 @@ const overflow = await page.evaluate(() => Array.from(document.querySelectorAll(
   const last = inFlow[inFlow.length - 1];
   const bottom = last ? last.getBoundingClientRect().bottom : box.bottom;
   return { slide: i + 1, overflowPx: Math.round(Math.max(0, bottom - (box.bottom - padBottom))) };
-}));
+}), feed ? '.tile' : '.slide');
 for (const o of overflow){
   if (o.overflowPx > 0) console.warn(`  aviso: slide ${o.slide} se sale ${o.overflowPx}px del marco`);
 }
 
-const slides = await page.locator('.slide').all();
-const names = ['portada', 'que-incluye', 'antes-despues', 'planes', 'contacto'];
-for (const [i, slide] of slides.entries()){
-  const name = `${String(i + 1).padStart(2, '0')}-${names[i] || 'slide'}${suffix}.png`;
-  await slide.screenshot({ path: join(outDir, name) });
-  console.log(`dist/${name}`);
+if (feed){
+  const tiles = await page.locator('.tile').all();
+  for (const tile of tiles){
+    const name = `${await tile.getAttribute('data-name')}-1080x1080.png`;
+    await tile.screenshot({ path: join(outDir, 'feed', name) });
+    console.log(`dist/feed/${name}`);
+  }
+} else {
+  const slides = await page.locator('.slide').all();
+  const names = ['portada', 'que-incluye', 'antes-despues', 'planes', 'contacto'];
+  for (const [i, slide] of slides.entries()){
+    const name = `${String(i + 1).padStart(2, '0')}-${names[i] || 'slide'}${suffix}.png`;
+    await slide.screenshot({ path: join(outDir, name) });
+    console.log(`dist/${name}`);
+  }
 }
 
 await browser.close();
