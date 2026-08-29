@@ -3,6 +3,7 @@
    Drop the real files in ./layers (named per layout.json) and re-run. */
 import sharp from "sharp";
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { loadLayer } from "./cutout.mjs";
 
 const layout = JSON.parse(readFileSync("layout.json", "utf8"));
 const STACK_W = 1000;
@@ -19,12 +20,9 @@ const composites = [];
 
 for (const L of layout.layers) {
   const file = find(L.file);
-  const meta = await sharp(file).metadata();
-  // trim the transparent margin so --t/--w address the ingredient itself, not the canvas
-  let pipe = sharp(file);
-  if (meta.hasAlpha) pipe = pipe.trim({ threshold: 2 });
-  const trimmed = await pipe.png().toBuffer();
-  const tm = await sharp(trimmed).metadata();
+  // cropped to the ingredient itself, so --t/--w address the food and not the canvas
+  const { buf: trimmed, width: tw, height: th, keyed } = await loadLayer(file);
+  const tm = { width: tw, height: th };
 
   const web = await sharp(trimmed)
     .resize({ width: 900, withoutEnlargement: true })
@@ -43,9 +41,9 @@ for (const L of layout.layers) {
     top: Math.round(STACK_H * L.t / 100),
     _h: sm.height
   });
-  console.log(String(L.id).padEnd(4), file.padEnd(34), `${meta.width}x${meta.height}`,
-    meta.hasAlpha ? "alpha" : "NO-ALPHA", "→ trim", `${tm.width}x${tm.height}`,
-    "→", Math.round(web.length / 1024) + "KB");
+  console.log(String(L.id).padEnd(4), file.replace("layers/", "").padEnd(26),
+    keyed ? "keyed  " : "alpha  ", `${tm.width}x${tm.height}`.padEnd(10),
+    "ar " + (tm.width / tm.height).toFixed(2), "→", Math.round(web.length / 1024) + "KB");
 }
 
 // the canvas has to clear the lowest layer's full height, not just its top edge

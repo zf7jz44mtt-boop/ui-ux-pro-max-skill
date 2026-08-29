@@ -1,13 +1,53 @@
 {
-  "stackAspect": 1.06,
+  "stackAspect": 1.2,
   "layers": [
-    { "id": "l1", "file": "layer-1-bun-bottom", "w": 100, "t": 72 },
-    { "id": "l2", "file": "layer-2-lettuce",    "w": 100, "t": 64 },
-    { "id": "l3", "file": "layer-3-tomato",     "w": 92,  "t": 58 },
-    { "id": "l4", "file": "layer-4-onion",      "w": 88,  "t": 52 },
-    { "id": "l5", "file": "layer-5-kebab-meat", "w": 96,  "t": 40 },
-    { "id": "l6", "file": "layer-6-melted-cheese", "w": 94, "t": 31 },
-    { "id": "l7", "file": "layer-7-garlic-sauce",  "w": 84, "t": 24 },
-    { "id": "l8", "file": "layer-8-bun-top",    "w": 100, "t": 1 }
+    {
+      "id": "l1",
+      "file": "layer-1-bun-bottom",
+      "w": 100,
+      "t": 76.4
+    },
+    {
+      "id": "l2",
+      "file": "layer-2-lettuce",
+      "w": 100,
+      "t": 63.5
+    },
+    {
+      "id": "l3",
+      "file": "layer-3-tomato",
+      "w": 92,
+      "t": 61.6
+    },
+    {
+      "id": "l4",
+      "file": "layer-4-onion",
+      "w": 88,
+      "t": 54.1
+    },
+    {
+      "id": "l5",
+      "file": "layer-5-kebab-meat",
+      "w": 96,
+      "t": 38.3
+    },
+    {
+      "id": "l6",
+      "file": "layer-6-melted-cheese",
+      "w": 94,
+      "t": 26.8
+    },
+    {
+      "id": "l7",
+      "file": "layer-7-garlic-sauce",
+      "w": 84,
+      "t": 20.8
+    },
+    {
+      "id": "l8",
+      "file": "layer-8-bun-top",
+      "w": 100,
+      "t": 0
+    }
   ]
 }

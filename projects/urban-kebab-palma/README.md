@@ -32,7 +32,9 @@ src/
   layers/                 8 product layers, bottom of the stack to top
   layout.json             each layer's width and vertical offset in the stack
   urban-kebab.tpl.html    the page itself, with {{IMG:*}} and <!--LAYERS--> slots
-  prep.mjs                trims, resizes and encodes the layers; composites the hero
+  dechecker.mjs           keys out a transparency checkerboard baked into pixels
+  cutout.mjs              crops each layer to its alpha bounding box
+  prep.mjs                encodes the layers; composites the hero from them
   build.mjs               injects everything -> ../index.html
 ```
 
@@ -56,10 +58,17 @@ height) in `layout.json` and re-run — the CSS and the hero composite both foll
 Drop new files into `src/layers/` under the same names and re-run `npm run all`.
 They should be:
 
-- PNG with a real alpha channel (no baked-in background, plate or shadow)
 - shot straight-on from the side, same camera distance and lighting for all eight,
   so the layers stack into one coherent product
-- horizontally centred, comfortably larger than 900px wide
+- comfortably larger than 900px wide
+
+Real alpha is preferred, but a file that arrives with the transparency
+checkerboard flattened into its pixels — what an image host's preview download
+usually gives you — is handled automatically. `dechecker.mjs` keys it out by
+finding the background as the near-neutral, bright pixels *reachable from the
+border*; that connectivity test is what stops it punching holes through pale
+food like the garlic sauce or the crumb of the bun. Anything already carrying an
+alpha channel skips the step untouched.
 
 ## Content sources
 
