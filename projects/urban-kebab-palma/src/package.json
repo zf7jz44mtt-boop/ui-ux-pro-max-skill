@@ -1,0 +1,11 @@
+{
+  "name": "urban-kebab-palma-build",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prep": "node prep.mjs",
+    "build": "node build.mjs",
+    "all": "node prep.mjs && node build.mjs"
+  },
+  "dependencies": { "sharp": "^0.34.0" }
+}

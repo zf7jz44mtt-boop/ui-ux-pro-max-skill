@@ -1,0 +1,664 @@
+<title>Urban Kebab Palma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+
+<style>
+/* ============================================================
+   URBAN KEBAB PALMA — dark-first token system
+   ground: deep olive-black (Mediterranean night, not pure black)
+   accent: ember/paprika — the only loud colour on the page
+   ============================================================ */
+:root{
+  --ground:#12150E;
+  --ground-2:#191D12;
+  --surface:#222719;
+  --line:rgba(239,235,224,.15);
+  --line-soft:rgba(239,235,224,.08);
+  --text:#EFEBE0;
+  --text-dim:#9DA18F;
+  --ember:#E8511F;
+  --ember-soft:#FF7A45;
+  --saffron:#E9B949;
+  --olive:#8B9A64;
+  --shadow:rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --ground:#EFEADD;
+    --ground-2:#E4DECE;
+    --surface:#FAF7EF;
+    --line:rgba(18,21,14,.18);
+    --line-soft:rgba(18,21,14,.09);
+    --text:#14170F;
+    --text-dim:#5B6050;
+    --ember:#C6400F;
+    --ember-soft:#E8511F;
+    --saffron:#966D08;
+    --olive:#5E6D3C;
+    --shadow:rgba(18,21,14,.18);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --ground:#EFEADD; --ground-2:#E4DECE; --surface:#FAF7EF;
+  --line:rgba(18,21,14,.18); --line-soft:rgba(18,21,14,.09);
+  --text:#14170F; --text-dim:#5B6050;
+  --ember:#C6400F; --ember-soft:#E8511F; --saffron:#966D08; --olive:#5E6D3C;
+  --shadow:rgba(18,21,14,.18); color-scheme:light;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--text);
+  font-family:"Barlow","Helvetica Neue",Arial,sans-serif;
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:2px}
+
+/* ---------- shared type roles ---------- */
+.display{
+  font-family:"Anton","Barlow Condensed",Impact,sans-serif;
+  font-weight:400;
+  text-transform:uppercase;
+  letter-spacing:-.018em;
+  line-height:.86;
+}
+.eyebrow{
+  font-family:"Barlow Condensed",sans-serif;
+  font-weight:600;
+  font-size:.75rem;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--text-dim);
+}
+.lede{font-size:1.0625rem;color:var(--text-dim);max-width:56ch}
+
+.wrap{width:min(1240px,92vw);margin-inline:auto}
+.sec{padding-block:clamp(5rem,11vw,9rem)}
+
+/* ---------- fixed side rail (desktop only) ---------- */
+.rail-side{
+  position:fixed;left:22px;top:0;bottom:0;width:22px;z-index:40;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  pointer-events:none;
+}
+@media (min-width:1180px){.rail-side{display:flex}}
+.rail-side span{
+  writing-mode:vertical-rl;
+  font-family:"Barlow Condensed",sans-serif;font-size:.7rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--text-dim);
+}
+.rail-track{flex:0 0 34vh;width:1px;background:var(--line);position:relative}
+.rail-track i{position:absolute;inset:0 0 auto 0;height:100%;background:var(--ember);transform:scaleY(0);transform-origin:top}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:60;
+  background:var(--ground);
+  background:color-mix(in srgb,var(--ground) 82%,transparent);
+  backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--line-soft);
+}
+.nav-in{display:flex;align-items:center;gap:clamp(1rem,4vw,3rem);height:64px}
+.mark{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:1.02rem;letter-spacing:.03em;white-space:nowrap;text-decoration:none}
+.mark b{color:var(--ember);font-weight:400}
+.nav-links{display:none;gap:2rem;margin-left:auto}
+@media (min-width:820px){.nav-links{display:flex}}
+.nav-links a{
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:.82rem;
+  letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--text-dim);
+  transition:color .18s ease;
+}
+.nav-links a:hover{color:var(--text)}
+.nav .btn{margin-left:auto}
+@media (min-width:820px){.nav .btn{margin-left:0}}
+
+.btn{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.86rem;
+  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  padding:.62rem 1.15rem;border-radius:2px;border:1px solid var(--ember);
+  background:var(--ember);color:#FFF6F1;
+  transition:transform .15s ease,filter .15s ease;
+}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn--ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn--ghost:hover{border-color:var(--text);filter:none}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-top:clamp(2rem,5vw,3.5rem);padding-bottom:0;overflow:hidden}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr;
+  gap:clamp(1.5rem,4vw,2.5rem) clamp(2rem,5vw,4rem);align-items:end}
+@media (min-width:900px){
+  .hero-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
+  .hero-head{grid-column:1;grid-row:1}
+  .hero-sub{grid-column:1;grid-row:2}
+  .hero-shot{grid-column:2;grid-row:1/span 2;align-self:center}
+}
+.hero h1{font-size:clamp(3.2rem,10.5vw,9rem)}
+.hero h1 em{font-style:normal;color:var(--ember);display:block}
+.hero-sub{display:flex;flex-direction:column;gap:1.5rem;padding-bottom:clamp(1rem,3vw,2.2rem)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:.7rem}
+.hero-shot{position:relative;justify-self:center;width:min(78vw,420px);pointer-events:none}
+@media (min-width:900px){.hero-shot{width:min(42vw,540px);margin-right:-2vw}}
+.hero-shot img{width:100%;height:auto;display:block;filter:drop-shadow(0 38px 55px rgba(0,0,0,.55))}
+.hero-shot::before{
+  content:"";position:absolute;inset:-18% -12%;z-index:-1;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,color-mix(in srgb,var(--ember) 30%,transparent),transparent 72%);
+}
+
+.stats{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--line-soft);border-block:1px solid var(--line-soft);
+  margin-top:clamp(3rem,7vw,5.5rem);
+}
+@media (min-width:760px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--ground);padding:1.4rem 1.2rem;display:flex;flex-direction:column;gap:.25rem}
+.stat b{
+  font-family:"Anton",sans-serif;font-size:1.75rem;letter-spacing:-.01em;font-weight:400;
+  font-variant-numeric:tabular-nums;
+}
+.stat span{font-family:"Barlow Condensed",sans-serif;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim)}
+
+/* ---------- ticker ---------- */
+.ticker{
+  border-block:1px solid var(--line);background:var(--ground-2);
+  overflow:hidden;padding-block:.85rem;
+}
+.ticker-row{display:flex;width:max-content;animation:slide 34s linear infinite}
+@keyframes slide{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+.ticker-row p{
+  font-family:"Anton",sans-serif;text-transform:uppercase;font-size:clamp(1.1rem,2.6vw,1.7rem);
+  letter-spacing:.01em;white-space:nowrap;padding-right:2.2rem;color:var(--text);
+}
+.ticker-row p i{color:var(--ember);font-style:normal;padding-inline:.9rem}
+
+/* ---------- montaje (scroll-scrubbed product build) ---------- */
+.montaje{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--ground-2)}
+.mz-stage{padding-bottom:clamp(1rem,3vw,2rem)}
+.montaje::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(58% 52% at 62% 46%,color-mix(in srgb,var(--ember) 16%,transparent),transparent 70%);
+  opacity:.5;
+}
+.mz-in{position:relative;width:min(1240px,92vw);margin-inline:auto;display:grid;gap:1.5rem;
+  grid-template-columns:1fr;align-items:center;padding-block:2.5rem}
+@media (min-width:900px){.mz-in{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:clamp(2rem,4vw,4rem)}}
+
+.ghost{
+  position:absolute;left:0;right:0;bottom:-.12em;
+  font-family:"Anton",sans-serif;text-transform:uppercase;text-align:center;
+  font-size:clamp(3rem,12vw,10rem);line-height:.78;letter-spacing:-.04em;
+  color:var(--text);opacity:.07;white-space:nowrap;pointer-events:none;user-select:none;z-index:0;
+}
+:root[data-theme="light"] .ghost{opacity:.085}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .ghost{opacity:.085}}
+
+.mz-copy{position:relative;z-index:2;display:grid;min-height:15.5rem}
+.mz-step{grid-area:1/1;opacity:0;transform:translateY(14px);transition:opacity .34s ease,transform .34s ease;pointer-events:none}
+.mz-step.on{opacity:1;transform:none}
+.mz-step .num{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.24em;
+  color:var(--ember);display:block;margin-bottom:.7rem;font-variant-numeric:tabular-nums;
+}
+.mz-step h3{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:.92;letter-spacing:-.015em;margin-bottom:.85rem}
+.mz-step p{color:var(--text-dim);max-width:34ch}
+
+.mz-stage{position:relative;z-index:1;display:flex;justify-content:center}
+.stack{position:relative;width:100%;max-width:min(40vw,520px);aspect-ratio:--stack-ar-value}
+@media (max-width:899px){.stack{max-width:min(70vw,340px)}}
+.ly{
+  position:absolute;left:50%;translate:-50% 0;
+  width:var(--w,100%);top:var(--t,0%);
+  height:auto;display:block;
+  filter:drop-shadow(0 22px 30px rgba(0,0,0,.5));
+}
+
+.mz-rail{position:relative;z-index:2;display:flex;gap:.42rem;margin-top:1.9rem}
+.mz-rail i{flex:1;height:2px;background:var(--line);transition:background .3s ease}
+.mz-rail i.on{background:var(--ember)}
+
+/* ---------- carta ---------- */
+.carta-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1.5rem;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.carta-head h2{font-size:clamp(2.4rem,7.5vw,5.6rem)}
+.menu{border-top:1px solid var(--line)}
+.row{
+  display:grid;grid-template-columns:1fr auto;gap:.4rem 1.5rem;align-items:baseline;
+  padding-block:1.35rem;border-bottom:1px solid var(--line-soft);position:relative;
+}
+.row h3{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:clamp(1.35rem,3.4vw,2.15rem);letter-spacing:-.01em;line-height:1}
+.row .price{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.35rem;
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap;
+}
+.row p{grid-column:1/-1;color:var(--text-dim);font-size:.98rem;max-width:62ch}
+.row .tag{
+  display:inline-block;vertical-align:middle;margin-left:.8rem;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.66rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ember);border:1px solid var(--ember);
+  padding:.14rem .5rem;border-radius:2px;
+}
+.row--star{border-left:3px solid var(--ember);padding-left:1.1rem;margin-left:-1.1rem}
+.row--star h3{color:var(--ember)}
+
+.extras{margin-top:clamp(2.5rem,5vw,3.5rem);display:grid;gap:1.4rem;grid-template-columns:1fr}
+@media (min-width:760px){.extras{grid-template-columns:auto 1fr;gap:2.5rem;align-items:start}}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.1em;
+  text-transform:uppercase;border:1px solid var(--line);padding:.4rem .8rem;border-radius:999px;color:var(--text-dim);
+}
+.note{margin-top:2rem;font-size:.86rem;color:var(--text-dim)}
+
+/* ---------- producto ---------- */
+.producto{background:var(--ground-2);border-block:1px solid var(--line-soft)}
+.cards{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-top:clamp(2.5rem,5vw,3.5rem)}
+@media (min-width:840px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--ground-2);padding:clamp(1.6rem,3vw,2.4rem);display:flex;flex-direction:column;gap:.8rem}
+.card .k{font-family:"Anton",sans-serif;font-size:2.6rem;line-height:1;color:var(--ember);opacity:.35;font-variant-numeric:tabular-nums}
+.card h3{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.28rem;letter-spacing:.02em;text-transform:uppercase}
+.card p{color:var(--text-dim);font-size:.98rem}
+
+/* ---------- locales ---------- */
+.locales-grid{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-top:clamp(2.5rem,5vw,3.5rem)}
+@media (min-width:820px){.locales-grid{grid-template-columns:1fr 1fr}}
+.local{background:var(--ground);padding:clamp(1.8rem,3.4vw,2.8rem);display:flex;flex-direction:column;gap:.9rem}
+.local h3{font-family:"Anton",sans-serif;text-transform:uppercase;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1}
+.local .meta{display:flex;flex-direction:column;gap:.3rem;color:var(--text-dim);font-size:.98rem}
+.local .meta b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.local a.map{
+  margin-top:auto;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:.82rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ember);text-decoration:none;
+  border-bottom:1px solid currentColor;align-self:flex-start;padding-bottom:2px;
+}
+.contact{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(2rem,4vw,3rem)}
+
+/* ---------- footer ---------- */
+.foot{border-top:1px solid var(--line);padding-block:2.4rem;margin-top:clamp(3rem,7vw,6rem)}
+.foot-in{display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;justify-content:space-between}
+.foot small{color:var(--text-dim);font-size:.82rem}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px)}
+.rv.shown{opacity:1;transform:none;transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  .rv{opacity:1;transform:none}
+  .ticker-row{animation:none}
+  
+}
+</style>
+
+<div class="rail-side" aria-hidden="true">
+  <span>39.5696°N&nbsp;&nbsp;2.6502°E</span>
+  <div class="rail-track"><i id="railFill"></i></div>
+  <span>Palma&nbsp;·&nbsp;Mallorca</span>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="#top">Urban <b>Kebab</b></a>
+    <nav class="nav-links">
+      <a href="#montaje">El montaje</a>
+      <a href="#carta">La carta</a>
+      <a href="#producto">El producto</a>
+      <a href="#locales">Locales</a>
+    </nav>
+    <a class="btn" href="#locales">Pedir</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-head">
+          <p class="eyebrow" style="margin-bottom:1.2rem">Palma de Mallorca · Desde 2021</p>
+          <h1 class="display">Kebab<br><em>gourmet</em></h1>
+        </div>
+        <div class="hero-sub">
+          <p class="lede">Tradición turca, carácter mediterráneo. Compramos la carne cada mañana en la Carnicería Rocha y cortamos las patatas el mismo día. Sin aditivos, sin trucos: producto fresco y sabor limpio.</p>
+          <div class="hero-cta">
+            <a class="btn" href="#carta">Ver la carta</a>
+            <a class="btn btn--ghost" href="#montaje">Cómo lo montamos</a>
+          </div>
+        </div>
+
+        <div class="hero-shot">
+          <img src="{{IMG:hero}}" alt="Un Urban Kebab completo: pan de pita, lechuga, tomate, cebolla, ternera Black Angus, triple queso y salsa de la casa." decoding="async" fetchpriority="high">
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>32K</b><span>Seguidores en Instagram</span></div>
+        <div class="stat"><b>2</b><span>Locales en Palma</span></div>
+        <div class="stat"><b>13:00–23:30</b><span>Todos los días</span></div>
+        <div class="stat"><b>140 g</b><span>Black Angus por pieza</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TICKER ============ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-row" id="tickerRow"></div>
+  </div>
+
+  <!-- ============ MONTAJE — scroll-scrubbed build ============ -->
+  <section class="montaje" id="montaje" aria-label="El montaje de un Urban Kebab, capa a capa">
+    <h3 class="ghost display" id="ghostWord">Pan de pita</h3>
+
+    <div class="mz-in">
+      <div>
+        <p class="eyebrow" style="margin-bottom:1.6rem">El montaje · capa a capa</p>
+        <div class="mz-copy" id="mzCopy"></div>
+        <div class="mz-rail" id="mzRail" aria-hidden="true"></div>
+      </div>
+
+      <div class="mz-stage">
+        <div class="stack" id="kebab" role="img"
+             data-layers
+             aria-label="Un Urban Kebab montándose capa a capa: pan de pita, lechuga, tomate, cebolla morada, ternera Black Angus, triple queso, salsa de la casa y la tapa de pan con sésamo.">
+<!--LAYERS-->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CARTA ============ -->
+  <section class="sec" id="carta">
+    <div class="wrap">
+      <div class="carta-head rv">
+        <div>
+          <p class="eyebrow" style="margin-bottom:1.2rem">La carta</p>
+          <h2 class="display">Siete kebabs.<br>Ninguno de relleno.</h2>
+        </div>
+        <p class="lede" style="max-width:38ch">Todos se montan al momento sobre pan de pita recién hecho. Cambia el interior, nunca la exigencia.</p>
+      </div>
+
+      <div class="menu">
+        <article class="row rv">
+          <h3>Solo Carne</h3><span class="price">7,95 €</span>
+          <p>La carne, sin distracciones. Para quien viene a lo que viene.</p>
+        </article>
+        <article class="row rv">
+          <h3>Completo Clásico</h3><span class="price">8,95 €</span>
+          <p>La receta turca original: salsa de yogur, cebolla morada y verdura fresca del día.</p>
+        </article>
+        <article class="row rv">
+          <h3>Cheese Boom</h3><span class="price">8,95 €</span>
+          <p>Gouda, mozzarella y cheddar fundidos sobre la carne caliente. Nada más, nada menos.</p>
+        </article>
+        <article class="row rv">
+          <h3>Kebab Parmesano</h3><span class="price">9,95 €</span>
+          <p>Tomate concassé, rúcula fresca, parmesano y un toque de puré de berenjena.</p>
+        </article>
+        <article class="row rv">
+          <h3>Kebab Mexicano</h3><span class="price">9,95 €</span>
+          <p>Jalapeños, cheddar fundido, carne jugosa y lechuga crujiente. Pica lo justo.</p>
+        </article>
+        <article class="row rv">
+          <h3>Ternera Black Angus</h3><span class="price">10,90 €</span>
+          <p>140 g de Black Angus comprados esa misma mañana en la Carnicería Rocha.</p>
+        </article>
+        <article class="row row--star rv">
+          <h3>Balearic <span class="tag">El más pedido</span></h3><span class="price">10,95 €</span>
+          <p>Sobrasada mallorquina, miel y la mezcla de tres quesos. El kebab que solo tiene sentido en Palma.</p>
+        </article>
+      </div>
+
+      <div class="extras rv">
+        <p class="eyebrow" style="padding-top:.35rem">Y además</p>
+        <div class="chips">
+          <span class="chip">Hamburguesa Black Angus 140 g</span>
+          <span class="chip">Pan brioche</span>
+          <span class="chip">Boniato frito con mayo kimchi</span>
+          <span class="chip">Patatas naturales</span>
+          <span class="chip">Falafel</span>
+          <span class="chip">Shish taouk</span>
+          <span class="chip">Dürüm</span>
+        </div>
+      </div>
+      <p class="note">Carta orientativa. Los precios y la disponibilidad definitivos son los del local y los de Glovo.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTO ============ -->
+  <section class="sec producto" id="producto">
+    <div class="wrap">
+      <div class="rv">
+        <p class="eyebrow" style="margin-bottom:1.2rem">El producto</p>
+        <h2 class="display" style="font-size:clamp(2.2rem,6.5vw,4.8rem)">Se compra por la mañana.<br>Se sirve por la tarde.</h2>
+      </div>
+      <div class="cards">
+        <div class="card rv">
+          <span class="k">01</span>
+          <h3>Carnicería Rocha</h3>
+          <p>La carne se compra cada mañana en una carnicería de barrio, no en un almacén. Por eso la carta la marca el día, no el congelador.</p>
+        </div>
+        <div class="card rv">
+          <span class="k">02</span>
+          <h3>Patata cortada a diario</h3>
+          <p>Todas las versiones de patata son naturales y se cortan en el local. Fritas a temperatura controlada para que queden crujientes por fuera y tiernas dentro.</p>
+        </div>
+        <div class="card rv">
+          <span class="k">03</span>
+          <h3>Boniato y mayo kimchi</h3>
+          <p>Bastones de boniato fritos al punto exacto, con mayonesa de kimchi de la casa. El acompañamiento que se pide sin mirar la carta.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOCALES ============ -->
+  <section class="sec" id="locales">
+    <div class="wrap">
+      <div class="carta-head rv">
+        <div>
+          <p class="eyebrow" style="margin-bottom:1.2rem">Dónde estamos</p>
+          <h2 class="display">Dos locales<br>en Palma.</h2>
+        </div>
+        <p class="lede" style="max-width:34ch">Abrimos todos los días. Para comer aquí, para llevar o a domicilio con Glovo.</p>
+      </div>
+
+      <div class="locales-grid">
+        <div class="local rv">
+          <h3>Pascual Ribot</h3>
+          <div class="meta">
+            <b>Carrer de Pascual Ribot, 50</b>
+            <span>07011 Palma de Mallorca</span>
+            <span>Todos los días · <b>13:00 – 23:30</b></span>
+            <span>Sala, terraza y para llevar</span>
+          </div>
+          <a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=Urban+Kebab+Carrer+de+Pascual+Ribot+50+Palma" target="_blank" rel="noopener">Cómo llegar</a>
+        </div>
+        <div class="local rv">
+          <h3>Arxiduc Lluís Salvador</h3>
+          <div class="meta">
+            <b>Carrer de l'Arxiduc Lluís Salvador, 137</b>
+            <span>Palma de Mallorca</span>
+            <span>Todos los días · <b>13:00 – 23:30</b></span>
+            <span>Para llevar y domicilio</span>
+          </div>
+          <a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=Urban+Kebab+Arxiduc+Lluis+Salvador+137+Palma" target="_blank" rel="noopener">Cómo llegar</a>
+        </div>
+      </div>
+
+      <div class="contact rv">
+        <a class="btn" href="tel:+34687086741">Llamar · 687 08 67 41</a>
+        <a class="btn btn--ghost" href="https://www.instagram.com/urbankebabpalma/" target="_blank" rel="noopener">Instagram · 32K</a>
+        <a class="btn btn--ghost" href="https://glovoapp.com/" target="_blank" rel="noopener">Pedir por Glovo</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <a class="mark" href="#top">Urban <b>Kebab</b></a>
+      <small>Palma de Mallorca · 39.5696°N 2.6502°E</small>
+      <small>Kebab gourmet, producto fresco cada día.</small>
+    </div>
+  </footer>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- ticker ---------- */
+  var phrases = [
+    "Carne de Rocha cada mañana", "Boniato con mayo kimchi", "Sobrasada y miel",
+    "Black Angus 140 g", "Patata cortada a diario", "Pan de pita recién hecho"
+  ];
+  var row = document.getElementById("tickerRow");
+  if (row) {
+    var block = phrases.map(function (t) {
+      return '<p>' + t + '<i>&#10022;</i></p>';
+    }).join("");
+    row.innerHTML = block + block; /* duplicated so -50% loops seamlessly */
+  }
+
+  /* ---------- montaje steps ---------- */
+  var STEPS = [
+    { id: "#l1", word: "Pan de pita",  title: "Pan de pita",        text: "La base. Tierna por dentro, con el borde tostado en plancha justo antes de montar.", from: { x: -380, y: 130, rotation: -22 } },
+    { id: "#l2",   word: "Lechuga",      title: "Lechuga",            text: "Cortada en el local, no en bolsa. Crujiente o no entra.",                            from: { x: -320, y: -180, rotation: 20 } },
+    { id: "#l3",    word: "Tomate",       title: "Tomate",             text: "De temporada, mallorquín siempre que la temporada lo permite.",                      from: { x: 380, y: -210, rotation: 28 } },
+    { id: "#l4",     word: "Cebolla",      title: "Cebolla morada",     text: "En juliana fina. Es el punto ácido que sostiene todo lo demás.",                     from: { x: -340, y: -80, rotation: -18 } },
+    { id: "#l5",      word: "Ternera",      title: "Ternera Black Angus", text: "140 g comprados esa misma mañana en la Carnicería Rocha. Aquí se decide el kebab.", from: { x: 400, y: 170, rotation: 16 } },
+    { id: "#l6",    word: "Queso",        title: "Triple queso",       text: "Gouda, mozzarella y cheddar, fundidos por el calor de la propia carne.",             from: { x: -400, y: -40, rotation: -14 } },
+    { id: "#l7",     word: "Salsa",        title: "Salsa de la casa",   text: "Yogur, ajo y hierbas. Sin aditivos, igual que todo lo que hay debajo.",              from: { x: 340, y: -250, rotation: 22 } },
+    { id: "#l8",  word: "Cerrado",      title: "Y se cierra",        text: "Se dobla, se prensa y sale. Entre el pedido y la mesa no pasan diez minutos.",       from: { x: 0, y: -460, rotation: -10 } },
+    { id: null,           word: "Urban Kebab",  title: "Listo",              text: "Así, exactamente así, siete veces distintas en la carta.",                           from: null }
+  ];
+
+  var copy = document.getElementById("mzCopy");
+  var rail = document.getElementById("mzRail");
+  var ghost = document.getElementById("ghostWord");
+
+  STEPS.forEach(function (s, i) {
+    var d = document.createElement("div");
+    d.className = "mz-step" + (i === 0 ? " on" : "");
+    d.innerHTML = '<span class="num">' + String(i + 1).padStart(2, "0") + " / " + STEPS.length +
+      '</span><h3>' + s.title + "</h3><p>" + s.text + "</p>";
+    copy.appendChild(d);
+    rail.appendChild(document.createElement("i"));
+  });
+  var stepEls = copy.querySelectorAll(".mz-step");
+  var tickEls = rail.querySelectorAll("i");
+  tickEls[0].classList.add("on");
+
+  function setStep(i) {
+    if (setStep.last === i) return;
+    setStep.last = i;
+    for (var n = 0; n < stepEls.length; n++) {
+      stepEls[n].classList.toggle("on", n === i);
+      tickEls[n].classList.toggle("on", n <= i);
+    }
+    ghost.textContent = STEPS[i].word;
+  }
+  setStep.last = 0;
+
+  /* ---------- reveals (independent of GSAP) ---------- */
+  var reveals = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e, i) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        setTimeout(function () { el.classList.add("shown"); }, i * 70);
+        io.unobserve(el);
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add("shown"); });
+  }
+
+  /* ---------- scroll-linked build ---------- */
+  if (!window.gsap || !window.ScrollTrigger) return; /* page stays complete without it */
+  gsap.registerPlugin(ScrollTrigger);
+
+  var railFill = document.getElementById("railFill");
+  if (railFill) {
+    gsap.to(railFill, {
+      scaleY: 1, ease: "none",
+      scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: true }
+    });
+  }
+
+  var mm = gsap.matchMedia();
+
+  mm.add({
+    reduced: "(prefers-reduced-motion: reduce)",
+    desktop: "(prefers-reduced-motion: no-preference) and (min-width: 900px)",
+    mobile:  "(prefers-reduced-motion: no-preference) and (max-width: 899px)"
+  }, function (ctx) {
+    var c = ctx.conditions;
+
+    if (c.reduced) {
+      /* no pin, no scrub: the kebab is already whole, the steps read as a list */
+      copy.style.display = "flex";
+      copy.style.flexDirection = "column";
+      copy.style.gap = "1.6rem";
+      stepEls.forEach(function (el) { el.classList.add("on"); });
+      tickEls.forEach(function (el) { el.classList.add("on"); });
+      ghost.textContent = "Urban Kebab";
+      return;
+    }
+
+    var tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#montaje",
+        start: "top top",
+        end: c.desktop ? "+=520%" : "+=380%",
+        scrub: 0.6,
+        pin: true,
+        anticipatePin: 1,
+        onUpdate: function (self) {
+          var i = Math.floor(self.progress * STEPS.length);
+          setStep(Math.max(0, Math.min(STEPS.length - 1, i)));
+        }
+      }
+    });
+
+    STEPS.forEach(function (s, i) {
+      if (!s.from) return;
+      var f = Object.assign({ opacity: 0, duration: 1.15 }, s.from);
+      if (!c.desktop) { f.x *= 0.6; f.y *= 0.6; }
+      tl.from(s.id, f, i);
+    });
+
+    /* the last beat: the finished kebab settles into frame */
+    tl.to("#kebab", { scale: 1.05, transformOrigin: "50% 60%", duration: 1 }, STEPS.length - 1);
+
+    /* hero cone drifts as you leave the fold */
+    gsap.to(".hero-shot", {
+      yPercent: 16, rotation: 3, ease: "none",
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.5 }
+    });
+
+    return function () { setStep.last = -1; setStep(0); };
+  });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+  }
+  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+})();
+</script>
