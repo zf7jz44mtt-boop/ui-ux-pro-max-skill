@@ -26,7 +26,7 @@ for (const L of layout.layers) {
 
   const web = await sharp(trimmed)
     .resize({ width: 900, withoutEnlargement: true })
-    .webp({ quality: 82, alphaQuality: 92, effort: 6 })
+    .webp({ quality: 76, alphaQuality: 90, effort: 6 })
     .toBuffer();
   const wm = await sharp(web).metadata();
   assets[L.id] = { uri: "data:image/webp;base64," + web.toString("base64"), kb: web.length / 1024 };
@@ -55,13 +55,13 @@ const stacked = await sharp({ create: { width: STACK_W, height: canvasH, channel
   .toBuffer();
 const hero = await sharp(stacked)
   .trim({ threshold: 2 })
-  .resize({ width: 920, withoutEnlargement: true })
-  .webp({ quality: 84, alphaQuality: 92, effort: 6 })
+  .resize({ width: 860, withoutEnlargement: true })
+  .webp({ quality: 78, alphaQuality: 90, effort: 6 })
   .toBuffer();
 assets.hero = { uri: "data:image/webp;base64," + hero.toString("base64"), kb: hero.length / 1024 };
 assets._stackAspect = +(STACK_W / canvasH).toFixed(4);
 await sharp(hero).toFile("hero-preview.webp");
-console.log("hero  composited from all 8 layers →", Math.round(hero.length / 1024) + "KB");
+console.log("hero  composited from all layers →", Math.round(hero.length / 1024) + "KB");
 
 writeFileSync("assets.json", JSON.stringify(assets));
 console.log("stack aspect", assets._stackAspect);

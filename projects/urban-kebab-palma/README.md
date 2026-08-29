@@ -29,8 +29,8 @@ and the compositing geometry can never drift apart.
 
 ```
 src/
-  layers/                 8 product layers, bottom of the stack to top
-  layout.json             each layer's width and vertical offset in the stack
+  layers/                 the product layers, bottom of the stack to top
+  layout.json             the stack: geometry and scroll-step copy per layer
   urban-kebab.tpl.html    the page itself, with {{IMG:*}} and <!--LAYERS--> slots
   dechecker.mjs           keys out a transparency checkerboard baked into pixels
   cutout.mjs              crops each layer to its alpha bounding box
@@ -50,8 +50,19 @@ the source file happened to carry. It then stacks the layers with that same geom
 to composite the hero shot, which means the hero is a true render of the finished
 product rather than a separate image that can fall out of sync.
 
-To restyle the stack, edit `w` (width, % of stack) and `t` (top offset, % of stack
-height) in `layout.json` and re-run — the CSS and the hero composite both follow.
+`layout.json` is the single source for the whole sequence. Each entry carries its
+geometry — `w` (width, % of stack) and `t` (top offset, % of stack height) — and
+the copy for its scroll step. The layer markup, the step list the animation walks
+through, and the hero composite are all generated from it, so a layer is added or
+reordered in one place and everything follows.
+
+**Still to come:** lettuce and tomato. Their photography had not arrived, and two
+flat vector stand-ins beside six photographic layers cheapened the whole stack,
+so the build ships as six real layers rather than a mixed eight. To add them,
+drop the cutouts into `src/layers/` and insert their entries into `layout.json`
+between the bun base and the onion, then re-run `npm run all`. Nothing else
+needs touching. The offsets below the insertion point will want nudging so the
+stack closes up.
 
 ## Replacing the product photography
 

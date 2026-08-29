@@ -4,12 +4,17 @@ const tpl = readFileSync("urban-kebab.tpl.html", "utf8");
 const layout = JSON.parse(readFileSync("layout.json", "utf8"));
 const assets = JSON.parse(readFileSync("assets.json", "utf8"));
 
+const steps = JSON.stringify(
+  layout.layers.map(L => ({ id: "#" + L.id, word: L.word, title: L.title, text: L.text }))
+    .concat([{ id: null, ...layout.final }]));
+
 const imgs = layout.layers.map(L =>
   `          <img class="ly" id="${L.id}" src="${assets[L.id].uri}" alt="" aria-hidden="true"\n` +
   `               style="--w:${L.w}%;--t:${L.t}%" decoding="async">`
 ).join("\n");
 
 let body = tpl.replace("<!--LAYERS-->", imgs)
+              .replace("/*STEPS*/", steps)
               .replace("--stack-ar-value", String(assets._stackAspect))
               .replace(/\{\{IMG:(\w+)\}\}/g, (_, k) => assets[k].uri);
 writeFileSync("urban-kebab.html", body);

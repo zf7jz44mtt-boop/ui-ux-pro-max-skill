@@ -1,53 +1,26 @@
 {
-  "stackAspect": 1.2,
+  "stackAspect": 1.09,
+  "_note": "Layers stack bottom-first: later entries paint over earlier ones. w = width as % of stack width, t = top offset as % of stack height. Add a layer by dropping its cutout in layers/ and adding an entry here in stacking order — the markup, the scroll steps and the hero composite all follow.",
   "layers": [
-    {
-      "id": "l1",
-      "file": "layer-1-bun-bottom",
-      "w": 100,
-      "t": 76.4
-    },
-    {
-      "id": "l2",
-      "file": "layer-2-lettuce",
-      "w": 100,
-      "t": 63.5
-    },
-    {
-      "id": "l3",
-      "file": "layer-3-tomato",
-      "w": 92,
-      "t": 61.6
-    },
-    {
-      "id": "l4",
-      "file": "layer-4-onion",
-      "w": 88,
-      "t": 54.1
-    },
-    {
-      "id": "l5",
-      "file": "layer-5-kebab-meat",
-      "w": 96,
-      "t": 38.3
-    },
-    {
-      "id": "l6",
-      "file": "layer-6-melted-cheese",
-      "w": 94,
-      "t": 26.8
-    },
-    {
-      "id": "l7",
-      "file": "layer-7-garlic-sauce",
-      "w": 84,
-      "t": 20.8
-    },
-    {
-      "id": "l8",
-      "file": "layer-8-bun-top",
-      "w": 100,
-      "t": 0
-    }
-  ]
+    { "id": "l1", "file": "layer-1-bun-bottom", "w": 100, "t": 73.4,
+      "word": "Pan de pita", "title": "Pan de pita",
+      "text": "La base. Tierna por dentro, con el borde tostado en plancha justo antes de montar." },
+    { "id": "l4", "file": "layer-4-onion", "w": 88, "t": 63.3,
+      "word": "Cebolla", "title": "Cebolla morada",
+      "text": "En juliana fina, cortada en el local. Es el punto ácido que sostiene todo lo demás." },
+    { "id": "l5", "file": "layer-5-kebab-meat", "w": 96, "t": 42.2,
+      "word": "Ternera", "title": "Ternera Black Angus",
+      "text": "140 g comprados esa misma mañana en la Carnicería Rocha. Aquí se decide el kebab." },
+    { "id": "l6", "file": "layer-6-melted-cheese", "w": 94, "t": 29.4,
+      "word": "Queso", "title": "Triple queso",
+      "text": "Gouda, mozzarella y cheddar, fundidos por el calor de la propia carne." },
+    { "id": "l7", "file": "layer-7-garlic-sauce", "w": 84, "t": 22.8,
+      "word": "Salsa", "title": "Salsa de la casa",
+      "text": "Yogur, ajo y hierbas. Sin aditivos, igual que todo lo que hay debajo." },
+    { "id": "l8", "file": "layer-8-bun-top", "w": 100, "t": 0,
+      "word": "Cerrado", "title": "Y se cierra",
+      "text": "Se dobla, se prensa y sale. Entre el pedido y la mesa no pasan diez minutos." }
+  ],
+  "final": { "word": "Urban Kebab", "title": "Listo",
+    "text": "Así, exactamente así, siete veces distintas en la carta." }
 }

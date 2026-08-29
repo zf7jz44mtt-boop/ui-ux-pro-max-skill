@@ -205,7 +205,8 @@ a{color:inherit}
 :root[data-theme="light"] .ghost{opacity:.085}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .ghost{opacity:.085}}
 
-.mz-copy{position:relative;z-index:2;display:grid;min-height:15.5rem}
+.mz-copy{position:relative;z-index:2;display:grid;min-height:13rem}
+@media (min-width:900px){.mz-copy{min-height:15.5rem}}
 .mz-step{grid-area:1/1;opacity:0;transform:translateY(14px);transition:opacity .34s ease,transform .34s ease;pointer-events:none}
 .mz-step.on{opacity:1;transform:none}
 .mz-step .num{
@@ -217,7 +218,7 @@ a{color:inherit}
 
 .mz-stage{position:relative;z-index:1;display:flex;justify-content:center}
 .stack{position:relative;width:100%;max-width:min(40vw,520px);aspect-ratio:--stack-ar-value}
-@media (max-width:899px){.stack{max-width:min(70vw,340px)}}
+@media (max-width:899px){.stack{max-width:min(80vw,380px)}}
 .ly{
   position:absolute;left:50%;translate:-50% 0;
   width:var(--w,100%);top:var(--t,0%);
@@ -225,7 +226,8 @@ a{color:inherit}
   filter:drop-shadow(0 22px 30px rgba(0,0,0,.5));
 }
 
-.mz-rail{position:relative;z-index:2;display:flex;gap:.42rem;margin-top:1.9rem}
+.mz-rail{position:relative;z-index:2;display:flex;gap:.42rem;margin-top:1.4rem}
+@media (min-width:900px){.mz-rail{margin-top:1.9rem}}
 .mz-rail i{flex:1;height:2px;background:var(--line);transition:background .3s ease}
 .mz-rail i.on{background:var(--ember)}
 
@@ -534,17 +536,7 @@ a{color:inherit}
   }
 
   /* ---------- montaje steps ---------- */
-  var STEPS = [
-    { id: "#l1", word: "Pan de pita",  title: "Pan de pita",        text: "La base. Tierna por dentro, con el borde tostado en plancha justo antes de montar.", from: { x: -380, y: 130, rotation: -22 } },
-    { id: "#l2",   word: "Lechuga",      title: "Lechuga",            text: "Cortada en el local, no en bolsa. Crujiente o no entra.",                            from: { x: -320, y: -180, rotation: 20 } },
-    { id: "#l3",    word: "Tomate",       title: "Tomate",             text: "De temporada, mallorquín siempre que la temporada lo permite.",                      from: { x: 380, y: -210, rotation: 28 } },
-    { id: "#l4",     word: "Cebolla",      title: "Cebolla morada",     text: "En juliana fina. Es el punto ácido que sostiene todo lo demás.",                     from: { x: -340, y: -80, rotation: -18 } },
-    { id: "#l5",      word: "Ternera",      title: "Ternera Black Angus", text: "140 g comprados esa misma mañana en la Carnicería Rocha. Aquí se decide el kebab.", from: { x: 400, y: 170, rotation: 16 } },
-    { id: "#l6",    word: "Queso",        title: "Triple queso",       text: "Gouda, mozzarella y cheddar, fundidos por el calor de la propia carne.",             from: { x: -400, y: -40, rotation: -14 } },
-    { id: "#l7",     word: "Salsa",        title: "Salsa de la casa",   text: "Yogur, ajo y hierbas. Sin aditivos, igual que todo lo que hay debajo.",              from: { x: 340, y: -250, rotation: 22 } },
-    { id: "#l8",  word: "Cerrado",      title: "Y se cierra",        text: "Se dobla, se prensa y sale. Entre el pedido y la mesa no pasan diez minutos.",       from: { x: 0, y: -460, rotation: -10 } },
-    { id: null,           word: "Urban Kebab",  title: "Listo",              text: "Así, exactamente así, siete veces distintas en la carta.",                           from: null }
-  ];
+  var STEPS = /*STEPS*/;
 
   var copy = document.getElementById("mzCopy");
   var rail = document.getElementById("mzRail");
@@ -638,8 +630,16 @@ a{color:inherit}
     });
 
     STEPS.forEach(function (s, i) {
-      if (!s.from) return;
-      var f = Object.assign({ opacity: 0, duration: 1.15 }, s.from);
+      if (!s.id) return;
+      var side = i % 2 ? 1 : -1;
+      var f = i === 0
+        ? { duration: 0.8, y: 70 }   // no fade: the stage must never be blank on arrival
+        : {
+            opacity: 0, duration: 1.15,
+            x: side * (300 + (i % 3) * 60),
+            y: (i % 2 ? 1 : -1) * (140 + (i % 4) * 45),
+            rotation: side * (12 + (i % 3) * 7)
+          };
       if (!c.desktop) { f.x *= 0.6; f.y *= 0.6; }
       tl.from(s.id, f, i);
     });
