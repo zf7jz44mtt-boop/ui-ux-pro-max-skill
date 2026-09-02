@@ -1,42 +1,76 @@
-# PACHA IBIZA — hero section
+# PACHA IBIZA — Drop 01 landing page
 
-A warm, editorial hero built around a single product shot: cream stage, the
-checkerboard polo floating as the protagonist, a giant wordmark laid over it,
-a small editorial kicker, and copy in the corners.
+A waitlist landing page for a limited drop, built around a single product
+photograph. Cream studio palette sampled from the shot, oxblood as the one
+accent, and a countdown to the drop moment.
 
 > Concept / art-direction exercise. Unofficial — not affiliated with Pacha.
 
 ```
 hero-pacha-ibiza/
-├── index.html              # the hero (self-contained: CSS + ~40 lines of JS)
-└── assets/polo-pacha.webp  # the product, cut out of its studio background
+├── index.html                    # the whole page: CSS + ~120 lines of JS
+└── assets/
+    ├── polo-pacha.webp           # the product, cut out of its studio background
+    └── detail-{collar,crest,print,weave}.webp
 ```
 
 Open `index.html` directly in a browser — there is no build step.
 
+## Structure
+
+| Section | Job |
+|---|---|
+| Hero | Product, wordmark, the promise, countdown, primary CTA |
+| The drop | 400 pieces / 1 per person / 24h early access |
+| Details | Four close-ups of the garment |
+| Waitlist | Email + size capture, on an oxblood block so it cannot be missed |
+| FAQ | Five questions, native `<details>` — no JS needed |
+| Footer | Navigation, the unofficial-concept note |
+
+A sticky bar appears once the hero scrolls away and hides again inside the
+waitlist section, so the CTA is always one tap away without nagging.
+
+## ⚠ Placeholder content
+
+Every figure on this page is invented for the comp. Replace before it goes
+anywhere real:
+
+- **Drop date** — `const DROP` at the foot of `index.html`. ISO 8601 with an
+  explicit offset. If the date has passed, the counter stops at zero and the
+  label flips to "The drop is live" rather than counting up.
+- **400 pieces, 1 per person, 24h early access** — the `#drop` section.
+- **Sizes, shipping, returns, price policy** — the `#faq` section.
+
+There is deliberately **no fake signup counter**. Manufactured social proof
+("1,247 already joined") is the one placeholder that misleads rather than just
+being wrong, so the scarcity claim leans on the run size instead.
+
+## ⚠ The form does not send anything
+
+`#wl-form` is front-end only. It validates the address, shows a success panel
+and stores nothing. **Wire it to a real endpoint before telling anyone they are
+on a list.** The handler is at the bottom of `index.html`, marked in a comment.
+
 ## The product asset
 
-`assets/polo-pacha.webp` is the supplied product photograph with its beige
-studio background and drop shadow removed (900×989, transparent, 146 KB).
+`assets/polo-pacha.webp` is the supplied photograph with its beige studio
+background and drop shadow removed (900×989, transparent, 146 KB).
 
-The cutout was done programmatically rather than by hand, because the polo's
-lightest cream squares sit within ~15 RGB of the studio beige. A plain
-flood-fill at a tolerance loose enough to catch the background also leaked
-through the shadow under the left collar wing and ate part of the garment.
-What the final matte does instead:
+The cutout was done programmatically, because the polo's lightest cream squares
+sit within ~15 RGB of the studio beige. A plain flood-fill loose enough to catch
+the background leaks through the shadow under the left collar wing and eats the
+garment — 82 lost px at tolerance 14, 3 525 at 16. So the matte:
 
-1. **Flood-fill at tolerance 14, not 22** — measured as the ceiling before the
-   fill escapes into the collar (82 lost px at 14, 3 525 at 16).
-2. **Shadow removed chromatically** — the drop shadow is beige scaled down, so
-   it is caught by `|rgb − k·bg| < 12` with `k` between 0.22 and 1.04, rather
-   than by brightness.
-3. **Alpha demands two things at once** — geometric interiority *and* a real
-   colour difference from beige. Either alone leaves a halo or punches holes in
-   the cream squares.
-4. **Colour decontamination** on the semi-transparent rim, un-mixing the beige
-   back out so the edge does not glow on a different background.
+1. **Floods at tolerance 14**, measured as the ceiling before the collar goes.
+2. **Removes the shadow chromatically** — it is beige scaled down, caught by
+   `|rgb − k·bg| < 12` with `k` in 0.22–1.04, not by brightness.
+3. **Derives alpha from two criteria at once** — geometric interiority *and*
+   colour difference. Either alone leaves a halo or punches holes in the cream.
+4. **Decontaminates the rim**, un-mixing the beige so the edge does not glow.
 
-### Swapping it
+The four detail images are square crops of the same photograph.
+
+### Swapping the product
 
 Drop your file into `assets/` and change one `src`:
 
@@ -46,44 +80,37 @@ Drop your file into `assets/` and change one `src`:
 
 Portrait, transparent background, roughly **0.85–1.0 aspect**. Sizing, the
 float, the parallax and the shadow all key off `.product__img` (marked
-`SWAP POINT` in the stylesheet). Keep `alt=""` — the garment is decorative and
-the accessible name lives in the visually hidden `<h1>`. Update the `width` and
-`height` attributes to the new file's real pixel size.
+`SWAP POINT`). Keep `alt=""` — it is decorative, and the page has a real `<h1>`.
+Update the `width`/`height` attributes to the file's true pixel size.
 
-**If the garment carries its own chest print**, check where the kicker lands.
-This polo does, so the kicker sits at 67% — down on the plain lower body — and
-not over the chest, where it would collide with the printed lockup.
-
-## Editing the copy
-
-Every text block is plain HTML marked with an `EDIT:` comment — brand, nav
-links, CTA, wordmark, kicker, editorial copy, info card.
-The visually hidden `<h1>` carries the message for screen readers; update it
-alongside the visible art so the two stay in sync.
+**If the garment carries its own chest print** — this one does — check nothing
+lands on top of it.
 
 ## Design notes
 
-- **Palette sampled from the photograph** so the garment sits in light that
-  matches the shot it was cut from: studio beige `#e6d6c6` became the page
-  ground, the logo oxblood `#6f2b24` is the single accent, and the polo's pink
-  drives the hairlines.
-- **Type** — Baloo 2 800 for the wordmark and brand, chosen because its rounded
-  bowls echo the polo's own logotype; Inter for UI and the editorial micro-type.
-- **Lighting** — the stage is lit like a warm studio rather than a dark set:
-  key pool behind the garment, wash from the top-left, an oxblood whisper at the
-  centre, a warm burn at the edges, and 5.5% grain on `multiply` so the texture
-  reads as paper rather than milk.
-- **The wordmark sits over the garment**, not behind it, on `mix-blend-mode:
-  multiply` — so the checkerboard, the collar ribbing and the crest read
-  *through* the letterforms instead of being veiled by flat tan.
-- **Motion** — the entrance is choreographed so the polo lands first and the
-  type follows: polo at 0.34s (90% visible by 0.93s), wordmark at 1.25s,
-  kicker at 1.65s. Plus an 11s float, pointer parallax (wordmark drifts with
-  the cursor, garment against it) and scroll parallax on the wordmark. All
-  disabled under `prefers-reduced-motion`.
-- **Accessibility** — every text token clears 4.5:1 against the stage; the
-  low-contrast wordmark and the kicker are `aria-hidden` decoration; all seven
-  interactive elements take a 2px oxblood focus ring.
-- **Responsive** — verified in Chromium at 16 widths from 320px to 1600px: no
-  horizontal overflow, and no collisions between the garment, the copy and the
-  info card at any of them.
+- **Palette sampled from the photograph**: studio beige `#e2d3c2`, logo oxblood
+  `#6f2b24` as the single accent, the polo's pink in the hairlines.
+- **Type** — Baloo 2 800 for display, chosen because its rounded bowls echo the
+  polo's own logotype; Inter for everything else.
+- **The wordmark sits over the garment** on `mix-blend-mode: multiply`, so the
+  checkerboard and the crest read *through* the letterforms.
+- **Entrance is choreographed** so the garment leads: polo at 0.34s, wordmark
+  at 1.25s, kicker at 1.65s.
+- **Reveals are opt-in** — `.rv` only hides once JS adds `.js` to `<html>`. With
+  JS off the page renders complete instead of blank.
+- **Reduced motion** kills every animation, the parallax listeners and smooth
+  scrolling.
+
+## Verified
+
+Chromium, 13 widths from 320px to 1600px:
+
+- No horizontal overflow at any width.
+- **Every visible text node passes WCAG AA** — checked by walking the DOM and
+  compositing translucent backgrounds, not by spot-checking tokens.
+- Every focusable element shows a focus ring. (The form fields needed an
+  explicit `:focus-visible` rule — `.field input:focus{outline:none}`
+  out-specifies the global one and was silently killing their ring.)
+- No tap target under 32px on a coarse pointer.
+- `prefers-reduced-motion`: 13/13 blocks visible, zero running animations.
+- The page renders fully with JavaScript disabled, minus the live counter.
