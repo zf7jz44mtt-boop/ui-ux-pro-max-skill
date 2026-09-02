@@ -1,8 +1,8 @@
 # PACHA IBIZA — hero section
 
-A warm, editorial hero built around a single product shot: cream stage, giant
-background wordmark, the checkerboard polo floating as the protagonist, a
-small editorial kicker, and copy in the corners.
+A warm, editorial hero built around a single product shot: cream stage, the
+checkerboard polo floating as the protagonist, a giant wordmark laid over it,
+a small editorial kicker, and copy in the corners.
 
 > Concept / art-direction exercise. Unofficial — not affiliated with Pacha.
 
@@ -57,7 +57,7 @@ not over the chest, where it would collide with the printed lockup.
 ## Editing the copy
 
 Every text block is plain HTML marked with an `EDIT:` comment — brand, nav
-links, CTA, background wordmark, kicker, editorial copy, info card.
+links, CTA, wordmark, kicker, editorial copy, info card.
 The visually hidden `<h1>` carries the message for screen readers; update it
 alongside the visible art so the two stay in sync.
 
@@ -73,9 +73,14 @@ alongside the visible art so the two stay in sync.
   key pool behind the garment, wash from the top-left, an oxblood whisper at the
   centre, a warm burn at the edges, and 5.5% grain on `multiply` so the texture
   reads as paper rather than milk.
-- **Motion** — staggered fade + translate on load, an 11s float, pointer
-  parallax (wordmark drifts with the cursor, garment against it) and scroll
-  parallax on the wordmark. All disabled under `prefers-reduced-motion`.
+- **The wordmark sits over the garment**, not behind it, on `mix-blend-mode:
+  multiply` — so the checkerboard, the collar ribbing and the crest read
+  *through* the letterforms instead of being veiled by flat tan.
+- **Motion** — the entrance is choreographed so the polo lands first and the
+  type follows: polo at 0.34s (90% visible by 0.93s), wordmark at 1.25s,
+  kicker at 1.65s. Plus an 11s float, pointer parallax (wordmark drifts with
+  the cursor, garment against it) and scroll parallax on the wordmark. All
+  disabled under `prefers-reduced-motion`.
 - **Accessibility** — every text token clears 4.5:1 against the stage; the
   low-contrast wordmark and the kicker are `aria-hidden` decoration; all seven
   interactive elements take a 2px oxblood focus ring.

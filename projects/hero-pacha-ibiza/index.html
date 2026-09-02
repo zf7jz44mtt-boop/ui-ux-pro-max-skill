@@ -30,7 +30,7 @@
   --ink:      #3a2420;   /* primary text, warm near-black               */
   --muted:    #7c5f54;   /* secondary text            (6.0:1)           */
   --dim:      #7d5e51;   /* editorial micro-labels    (4.8:1)           */
-  --ghost:    #cfb3a1;   /* giant background wordmark                   */
+  --ghost:    #cfb3a1;   /* giant wordmark, laid over the garment       */
   --cherry:   #6f2b24;   /* the ONE accent: logo oxblood                */
   --blush:    #efc0c0;   /* the polo's pink, for hairlines              */
   --hairline: rgba(111,43,36,.14);
@@ -153,13 +153,17 @@ a:focus-visible, button:focus-visible{
 .cta__arrow{ transition: transform .45s var(--ease); }
 .cta:hover .cta__arrow, .cta:focus-visible .cta__arrow{ transform: translateX(3px); }
 
-/* ══ GIANT WORDMARK — a graphic element, not a headline ═══════════════ */
+/* ══ GIANT WORDMARK — a graphic element, not a headline ═══════════════
+   Draws over the garment (z-index 25) and lands after it (1.25s delay).   */
 .ghost{
-  position:absolute; left:50%; top:16%; z-index:10;
+  position:absolute; left:50%; top:16%; z-index:25;
   pointer-events:none; user-select:none; white-space:nowrap; opacity:.72;
+  /* sits over the garment, but multiply lets the cloth read through the
+     letterforms instead of veiling it with flat tan */
+  mix-blend-mode: multiply;
   transform: translate(-50%,0) translate3d(calc(var(--mx) * 26px), calc(var(--my) * 13px), 0);
   transition: transform 1s var(--ease);
-  animation: ghost-in 1.6s var(--ease) .28s both;
+  animation: ghost-in 1.6s var(--ease) 1.25s both;
 }
 .ghost__word{
   display:block;
@@ -385,8 +389,8 @@ a:focus-visible, button:focus-visible{
       </a>
     </nav>
 
-    <!-- ── GIANT WORDMARK (sits behind the product) ────────────────── -->
-    <!-- EDIT: background wordmark -->
+    <!-- ── GIANT WORDMARK (overlays the product, multiply blend) ───── -->
+    <!-- EDIT: wordmark -->
     <div class="ghost" aria-hidden="true"><span class="ghost__word">Ibiza</span></div>
 
     <!-- ── PRODUCT ─────────────────────────────────────────────────── -->
@@ -401,7 +405,7 @@ a:focus-visible, button:focus-visible{
 
     <!-- ── KICKER ──────────────────────────────────────────────────── -->
     <!-- EDIT: kicker -->
-    <p class="kicker fade" style="--d:.95s" aria-hidden="true">Created for you</p>
+    <p class="kicker fade" style="--d:1.65s" aria-hidden="true">Created for you</p>
 
     <!-- ── EDITORIAL MARKS ─────────────────────────────────────────── -->
     <span class="edge edge--l fade" style="--d:.9s"  aria-hidden="true">SS / 26</span>
