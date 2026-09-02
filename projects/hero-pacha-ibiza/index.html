@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PACHA IBIZA — Cherry Season</title>
+<title>PACHA IBIZA — Checkerboard Polo</title>
 <meta name="description" content="A limited pre-order drop of the Pacha Ibiza checkerboard polo.">
 <meta name="color-scheme" content="light">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
 /* ══════════════════════════════════════════════════════════════════════
@@ -38,7 +38,6 @@
   /* ── type ─────────────────────────────────────────────────────────── */
   --font-display: 'Baloo 2', system-ui, -apple-system, sans-serif;
   --font-body:    'Inter', system-ui, -apple-system, sans-serif;
-  --font-hand:    'Caveat', 'Segoe Script', cursive;
 
   /* ── geometry & motion ────────────────────────────────────────────── */
   --stage-max:    1560px;
@@ -93,7 +92,7 @@ a:focus-visible, button:focus-visible{
 }
 
 /* Studio lighting, warm: a soft key pool behind the garment, a wash from
-   the top-left, a cherry whisper under the scrawl, then a gentle burn at
+   the top-left, a cherry whisper at the centre, then a gentle burn at
    the edges. Everything additive and warm — no grey, no black. */
 .stage__light{
   position:absolute; inset:0; z-index:0; pointer-events:none;
@@ -156,7 +155,7 @@ a:focus-visible, button:focus-visible{
 
 /* ══ GIANT WORDMARK — a graphic element, not a headline ═══════════════ */
 .ghost{
-  position:absolute; left:50%; top:29%; z-index:10;
+  position:absolute; left:50%; top:16%; z-index:10;
   pointer-events:none; user-select:none; white-space:nowrap; opacity:.72;
   transform: translate(-50%,0) translate3d(calc(var(--mx) * 26px), calc(var(--my) * 13px), 0);
   transition: transform 1s var(--ease);
@@ -202,24 +201,13 @@ a:focus-visible, button:focus-visible{
     drop-shadow(0 3px 5px rgba(104,58,40,.18));
 }
 
-/* ══ HAND-SCRAWLED OVERLAY ════════════════════════════════════════════ */
-.scrawl{
-  position:absolute; left:51%; top:63%; z-index:30;
+/* ══ KICKER ═══════════════════════════════════════════════════════════ */
+.kicker{
+  position:absolute; left:50%; top:67%; z-index:30;
   text-align:center; pointer-events:none;
-  transform: translateX(-50%) translate3d(calc(var(--mx) * -21px), calc(var(--my) * -11px), 0);
+  transform: translateX(-50%)
+             translate3d(calc(var(--mx) * -18px), calc(var(--my) * -9px), 0);
   transition: transform 1.1s var(--ease);
-}
-.scrawl__hand{
-  display:block;
-  font-family: var(--font-hand); font-weight:700;
-  font-size: clamp(1.85rem, 3.5vw, 3.15rem);
-  line-height:.95; white-space:nowrap; color: var(--cherry);
-  text-shadow: 0 1px 1px rgba(255,255,255,.45), 0 0 22px rgba(255,244,236,.6);
-  transform: rotate(-6.5deg);
-  animation: scrawl-in 1.15s var(--ease) .95s both;
-}
-.scrawl__sub{
-  display:block; margin-top:1.6rem;
   font-size:10px; font-weight:600;
   letter-spacing:.42em; text-transform:uppercase; color: var(--ink);
   text-shadow: 0 1px 0 rgba(255,255,255,.5);
@@ -276,8 +264,6 @@ a:focus-visible, button:focus-visible{
 @keyframes fade     { from{ opacity:0; }                                        to{ opacity:1; } }
 @keyframes ghost-in { from{ opacity:0; letter-spacing:.02em; }                  to{ opacity:.72; letter-spacing:-.03em; } }
 @keyframes haze-in  { from{ opacity:0; filter:blur(18px); }                     to{ opacity:1; filter:blur(0); } }
-@keyframes scrawl-in{ from{ opacity:0; transform:rotate(-12deg) translateY(12px) scale(.9); }
-                      to  { opacity:1; transform:rotate(-6.5deg) translateY(0) scale(1); } }
 @keyframes float    { from{ transform:translateY(10px) rotate(-.35deg); }        to{ transform:translateY(-14px) rotate(.35deg); } }
 
 /* ══ LAPTOP / SMALL DESKTOP ═══════════════════════════════════════════ */
@@ -292,8 +278,8 @@ a:focus-visible, button:focus-visible{
 /* ══ TABLET ═══════════════════════════════════════════════════════════ */
 @media (max-width: 1023px){
   .edge{ display:none; }
-  .ghost{ top:21%; }
-  .scrawl{ top:57%; }
+  .ghost{ top:16%; }
+  .kicker{ top:62%; }
   .product{ top:13%; bottom:34%; }
   .product__img{ max-width: min(400px, 56%); }
 }
@@ -316,7 +302,7 @@ a:focus-visible, button:focus-visible{
   .brand__cherry{ width:17px; height:17px; }
   .cta{ padding:9px 17px; font-size:9.5px; letter-spacing:.18em; }
 
-  .ghost{ top:33%; }
+  .ghost{ top:29%; }
   .ghost__word{ font-size: clamp(2.8rem, 17vw, 5rem); }
 
   /* bottom-aligned so the garment sits just above the copy band instead of
@@ -328,8 +314,8 @@ a:focus-visible, button:focus-visible{
     filter: drop-shadow(0 26px 26px rgba(104,58,40,.32)) drop-shadow(0 3px 5px rgba(104,58,40,.18));
   }
 
-  .scrawl{ left:50%; top:62%; }
-  .scrawl__sub{ margin-top:1.05rem; font-size:9.5px; letter-spacing:.34em; }
+  .kicker{ left:50%; top:66%; }
+  .kicker{ font-size:9.5px; letter-spacing:.34em; }
 
   .band{ bottom:26px; gap:14px; }
   .copy{ max-width:185px; }
@@ -413,12 +399,9 @@ a:focus-visible, button:focus-visible{
       </div>
     </div>
 
-    <!-- ── HAND-SCRAWLED OVERLAY ───────────────────────────────────── -->
-    <!-- EDIT: scrawl + kicker -->
-    <div class="scrawl" aria-hidden="true">
-      <span class="scrawl__hand">Cherry Season</span>
-      <span class="scrawl__sub">Created for you</span>
-    </div>
+    <!-- ── KICKER ──────────────────────────────────────────────────── -->
+    <!-- EDIT: kicker -->
+    <p class="kicker fade" style="--d:.95s" aria-hidden="true">Created for you</p>
 
     <!-- ── EDITORIAL MARKS ─────────────────────────────────────────── -->
     <span class="edge edge--l fade" style="--d:.9s"  aria-hidden="true">SS / 26</span>

@@ -2,7 +2,7 @@
 
 A warm, editorial hero built around a single product shot: cream stage, giant
 background wordmark, the checkerboard polo floating as the protagonist, a
-hand-scrawled oxblood overlay, and editorial copy in the corners.
+small editorial kicker, and copy in the corners.
 
 > Concept / art-direction exercise. Unofficial — not affiliated with Pacha.
 
@@ -50,14 +50,14 @@ float, the parallax and the shadow all key off `.product__img` (marked
 the accessible name lives in the visually hidden `<h1>`. Update the `width` and
 `height` attributes to the new file's real pixel size.
 
-**If the garment carries its own chest print**, check where the scrawl lands.
-This polo does, so the scrawl sits at 63% — down on the plain lower body — and
-not over the chest, where it collided with the printed lockup.
+**If the garment carries its own chest print**, check where the kicker lands.
+This polo does, so the kicker sits at 67% — down on the plain lower body — and
+not over the chest, where it would collide with the printed lockup.
 
 ## Editing the copy
 
 Every text block is plain HTML marked with an `EDIT:` comment — brand, nav
-links, CTA, background wordmark, scrawl, kicker, editorial copy, info card.
+links, CTA, background wordmark, kicker, editorial copy, info card.
 The visually hidden `<h1>` carries the message for screen readers; update it
 alongside the visible art so the two stay in sync.
 
@@ -68,16 +68,16 @@ alongside the visible art so the two stay in sync.
   ground, the logo oxblood `#6f2b24` is the single accent, and the polo's pink
   drives the hairlines.
 - **Type** — Baloo 2 800 for the wordmark and brand, chosen because its rounded
-  bowls echo the polo's own logotype; Inter for UI; Caveat 700 for the scrawl.
+  bowls echo the polo's own logotype; Inter for UI and the editorial micro-type.
 - **Lighting** — the stage is lit like a warm studio rather than a dark set:
-  key pool behind the garment, wash from the top-left, an oxblood whisper under
-  the scrawl, a warm burn at the edges, and 5.5% grain on `multiply` so the
-  texture reads as paper rather than milk.
+  key pool behind the garment, wash from the top-left, an oxblood whisper at the
+  centre, a warm burn at the edges, and 5.5% grain on `multiply` so the texture
+  reads as paper rather than milk.
 - **Motion** — staggered fade + translate on load, an 11s float, pointer
   parallax (wordmark drifts with the cursor, garment against it) and scroll
   parallax on the wordmark. All disabled under `prefers-reduced-motion`.
 - **Accessibility** — every text token clears 4.5:1 against the stage; the
-  low-contrast wordmark and the scrawl are `aria-hidden` decoration; all seven
+  low-contrast wordmark and the kicker are `aria-hidden` decoration; all seven
   interactive elements take a 2px oxblood focus ring.
 - **Responsive** — verified in Chromium at 16 widths from 320px to 1600px: no
   horizontal overflow, and no collisions between the garment, the copy and the
