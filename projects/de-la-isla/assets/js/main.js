@@ -4,7 +4,6 @@
 
 import { initIslaScene } from './isla-3d.js';
 import { initStagger } from './stagger.js';
-import { initCoverflow, initCompare, initBudget, initCounters } from './sliders.js';
 
 /* ---- header: stuck state + mobile nav ---------------------------------- */
 function initHeader(){
@@ -168,10 +167,6 @@ function boot(){
   initScrollSpy();
   initStagger();
   initAnimateOnScroll();
-  initCoverflow(document.querySelector('.coverflow'));
-  initCompare(document.querySelector('.compare'));
-  initBudget(document.querySelector('.calc'));
-  initCounters();
   initForm();
 
   const canvas = document.getElementById('isla-canvas');

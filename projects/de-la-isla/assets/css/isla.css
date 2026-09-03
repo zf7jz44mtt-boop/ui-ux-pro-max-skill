@@ -436,7 +436,7 @@ input[type="range"]::-moz-range-thumb{
 .contact-side dl{ margin:0; display:grid; gap:var(--s-4); }
 .contact-side dt{ font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-faint); }
 .contact-side dd{ margin:4px 0 0; font-size:16px; }
-.contact-side a{ color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(216,166,87,.4); }
+.contact-side a:not(.btn){ color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(216,166,87,.4); }
 
 /* ---------- Casilla de consentimiento (RGPD) ---------- */
 .field--consent{ gap:6px; }
@@ -455,6 +455,7 @@ input[type="range"]::-moz-range-thumb{
 /* ---------- Footer ---------- */
 .site-footer{ border-top:1px solid var(--line); padding:var(--s-8) 0 var(--s-6); background:var(--sea-800); }
 .footer-grid{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:var(--s-7); }
+.footer-grid--slim{ grid-template-columns:2fr 1fr; }
 .footer-grid h4{ font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sand-faint); font-weight:400; }
 .footer-grid ul{ list-style:none; margin:var(--s-4) 0 0; padding:0; display:grid; gap:10px; }
 .footer-grid a{ color:var(--sand-dim); text-decoration:none; font-size:15px; }

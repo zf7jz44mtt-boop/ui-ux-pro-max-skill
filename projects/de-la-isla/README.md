@@ -20,13 +20,16 @@ node scripts/bundle.mjs           # archivo único dist/de-la-isla.html
 
 ## Qué hay dentro
 
+La página tiene dos bloques: el hero con la escena 3D y el formulario de
+contacto. Las secciones de servicios, precios, proceso y preguntas se retiraron
+a petición del cliente; siguen en el historial de Git.
+
 | Pieza | Dónde | Qué hace |
 | --- | --- | --- |
 | Escena 3D del hero | `assets/js/isla-3d.js` | Amanecer mediterráneo con three.js: mar con shader propio, isla low-poly con pinos y faro, cúpula de cielo con degradado y motas de luz. |
-| Slider 3D de casos | `assets/js/sliders.js` → `initCoverflow` | Cover-flow con arrastre, swipe, teclado, puntos, autoplay y anuncio por `aria-live`. |
-| Antes / después | `assets/js/sliders.js` → `initCompare` | Comparador con tirador arrastrable y operable con ← → (rol `slider` con `aria-valuenow`). |
-| Calculadora de presupuesto | `assets/js/sliders.js` → `initBudget` | El rango recomienda plan, horas y servicios, y resalta la tarjeta de precio correspondiente. |
+| Formulario | `assets/js/main.js` → `initForm` | Validación en línea, casilla de consentimiento y envío a Netlify Forms por `fetch`, con WhatsApp como salida si algo falla. |
 | Revelado escalonado | `assets/js/stagger.js` | Port a web de `flutter_staggered_animations`. |
+| Sliders (sin usar ahora) | `assets/js/sliders.js` | Cover-flow, comparador antes/después y calculadora. Fuera del paquete desde que la página se quedó en hero + formulario; listos para volver. |
 | Empaquetado a un solo archivo | `scripts/bundle.mjs` | Genera `dist/de-la-isla.html`. |
 
 ## Cómo se usan los repositorios
