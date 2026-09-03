@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Nit — Club Nocturno de Lujo | Barcelona</title>
+  <meta name="description" content="La Nit: club nocturno de lujo en Barcelona. Tres salas, sonido Funktion-One, mesas VIP y sesiones hasta las 6 de la mañana.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Rubik+Spray+Paint&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#000000',
+            surface: '#0A0A0A',
+            graphite: '#141414',
+            line: '#242424',
+            text: '#F5F5F5',
+            muted: '#A1A1AA',
+            silver: '#D4D4D8',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'serif'],
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            spray: ['"Rubik Spray Paint"', 'system-ui', 'cursive'],
+            tag: ['"Permanent Marker"', 'system-ui', 'cursive'],
+          },
+          borderRadius: { glass: '20px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.055);
+      --glass-bg-strong: rgba(255, 255, 255, 0.10);
+      --glass-border: rgba(255, 255, 255, 0.14);
+      --blur: 18px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background-color: #000; color: #F5F5F5; }
+
+    /* Background layer sizing kept in plain CSS so the animation still fills
+       the viewport if the utility stylesheet is slow to arrive. */
+    #bg-layer { position: fixed; inset: 0; z-index: -10; background-color: #000; }
+    #bg-canvas { display: block; width: 100%; height: 100%; }
+
+    /* ---------- Glassmorphism ---------- */
+    .glass {
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(120%);
+      backdrop-filter: blur(var(--blur)) saturate(120%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .glass-strong { background: var(--glass-bg-strong); }
+    /* Light reflection sweep on the top edge of glass panels */
+    .glass-sheen { position: relative; overflow: hidden; }
+    .glass-sheen::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+    }
+
+    /* ---------- 3D tilt cards ---------- */
+    .scene { perspective: 1100px; }
+    .tilt {
+      transform-style: preserve-3d;
+      transition: transform 400ms cubic-bezier(.22,.61,.36,1), border-color 300ms ease;
+      will-change: transform;
+    }
+    .tilt:hover, .tilt:focus-within {
+      border-color: rgba(255, 255, 255, 0.32);
+      transform: translateZ(0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    }
+    .tilt-layer { transform: translateZ(38px); }
+
+    /* ---------- Rotating 3D cube ---------- */
+    .cube-scene { perspective: 900px; }
+    .cube {
+      position: relative;
+      width: 190px; height: 190px;
+      transform-style: preserve-3d;
+      animation: cube-spin 26s linear infinite;
+    }
+    .cube-face {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.30);
+      background: rgba(255, 255, 255, 0.045);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.07);
+    }
+    .cube-face--front  { transform: translateZ(95px); }
+    .cube-face--back   { transform: rotateY(180deg) translateZ(95px); }
+    .cube-face--right  { transform: rotateY(90deg) translateZ(95px); }
+    .cube-face--left   { transform: rotateY(-90deg) translateZ(95px); }
+    .cube-face--top    { transform: rotateX(90deg) translateZ(95px); }
+    .cube-face--bottom { transform: rotateX(-90deg) translateZ(95px); }
+    @keyframes cube-spin {
+      from { transform: rotateX(-18deg) rotateY(0deg); }
+      to   { transform: rotateX(-18deg) rotateY(360deg); }
+    }
+
+    /* ---------- Graffiti layer ---------- */
+    .graffiti-tag {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+      text-shadow: 0 0 34px rgba(255, 255, 255, 0.18);
+    }
+    .graffiti-fill {
+      background-image: linear-gradient(180deg, #FFFFFF 0%, #BFBFBF 55%, #6E6E6E 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .spray-blob {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(46px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .stencil {
+      background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 9px);
+    }
+
+    /* ---------- Film grain / noise ---------- */
+    .noise::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      opacity: 0.055;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.9'/></svg>");
+    }
+
+    /* ---------- Marquee ---------- */
+    .marquee { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ---------- Hairline + gradients ---------- */
+    .hairline { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent); height: 1px; }
+    .fade-edges {
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    }
+
+    /* ---------- Accessibility ---------- */
+    :focus-visible {
+      outline: 2px solid #FFFFFF;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 100;
+    }
+    .skip-link:focus { left: 1rem; top: 1rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .cube { animation: none; transform: rotateX(-18deg) rotateY(-32deg); }
+      .marquee { animation: none; }
+    }
+  </style>
+</head>
+<body class="bg-ink font-body text-text antialiased selection:bg-white selection:text-black">
+
+  <a href="#main" class="skip-link glass px-4 py-2 rounded-glass text-sm">Saltar al contenido</a>
+
+  <!-- ============ ANIMATED 3D BACKGROUND ============ -->
+  <div id="bg-layer" class="fixed inset-0 -z-10 bg-ink noise" aria-hidden="true">
+    <canvas id="bg-canvas" class="block h-full w-full"></canvas>
+    <div class="spray-blob" style="width:520px;height:520px;top:-120px;left:-140px;background:rgba(255,255,255,0.16)"></div>
+    <div class="spray-blob" style="width:420px;height:420px;bottom:-80px;right:-100px;background:rgba(255,255,255,0.10)"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.10),transparent_60%)]"></div>
+    <div class="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black to-transparent"></div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
+    <nav class="glass glass-sheen mx-auto flex max-w-6xl items-center justify-between rounded-glass px-5 py-3.5" aria-label="Principal">
+      <a href="#hero" class="group flex items-center gap-2.5">
+        <span class="grid h-9 w-9 place-items-center rounded-lg border border-white/25 bg-white/10 font-display text-lg font-black leading-none">N</span>
+        <span class="font-display text-lg font-bold tracking-[0.22em]">LA NIT</span>
+      </a>
+
+      <ul class="hidden items-center gap-8 text-sm md:flex">
+        <li><a href="#experiencia" class="text-muted transition-colors hover:text-white">Experiencia</a></li>
+        <li><a href="#agenda" class="text-muted transition-colors hover:text-white">Agenda</a></li>
+        <li><a href="#espacios" class="text-muted transition-colors hover:text-white">Espacios</a></li>
+        <li><a href="#galeria" class="text-muted transition-colors hover:text-white">Galería</a></li>
+        <li><a href="#faq" class="text-muted transition-colors hover:text-white">FAQ</a></li>
+      </ul>
+
+      <div class="flex items-center gap-2">
+        <a href="#reserva" class="hidden rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5 sm:inline-block">Reservar</a>
+        <button id="nav-toggle" type="button" class="grid h-10 w-10 place-items-center rounded-lg border border-white/20 md:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">
+          <span class="space-y-1.5">
+            <span class="block h-px w-5 bg-white"></span>
+            <span class="block h-px w-5 bg-white"></span>
+            <span class="block h-px w-5 bg-white"></span>
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <div id="mobile-menu" hidden class="glass mx-auto mt-2 max-w-6xl rounded-glass p-4 md:hidden">
+      <ul class="grid gap-1 text-sm">
+        <li><a href="#experiencia" class="block rounded-lg px-3 py-2.5 text-muted hover:bg-white/5 hover:text-white">Experiencia</a></li>
+        <li><a href="#agenda" class="block rounded-lg px-3 py-2.5 text-muted hover:bg-white/5 hover:text-white">Agenda</a></li>
+        <li><a href="#espacios" class="block rounded-lg px-3 py-2.5 text-muted hover:bg-white/5 hover:text-white">Espacios</a></li>
+        <li><a href="#galeria" class="block rounded-lg px-3 py-2.5 text-muted hover:bg-white/5 hover:text-white">Galería</a></li>
+        <li><a href="#faq" class="block rounded-lg px-3 py-2.5 text-muted hover:bg-white/5 hover:text-white">FAQ</a></li>
+        <li><a href="#reserva" class="mt-2 block rounded-full bg-white px-4 py-2.5 text-center font-semibold text-black">Reservar mesa</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-20 pt-32 sm:px-6">
+      <div class="mx-auto w-full max-w-6xl">
+
+        <p data-reveal class="mb-6 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] uppercase tracking-[0.32em] text-silver">
+          <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+          Barcelona · Desde 2014
+        </p>
+
+        <div class="relative">
+          <!-- Graffiti tag layered behind the wordmark -->
+          <span aria-hidden="true" class="pointer-events-none absolute -top-6 left-1 select-none font-spray text-[clamp(3rem,11vw,7.5rem)] leading-none text-white/[0.07] sm:-top-10">LA NIT</span>
+
+          <h1 data-reveal class="relative font-display text-[clamp(3.6rem,16vw,11rem)] font-black leading-[0.82] tracking-tight">
+            <span class="graffiti-fill block">LA NIT</span>
+          </h1>
+
+          <span aria-hidden="true" class="absolute -bottom-4 right-2 -rotate-6 select-none font-tag text-2xl text-white/70 sm:-bottom-2 sm:right-10 sm:text-4xl">after hours</span>
+        </div>
+
+        <p data-reveal class="mt-10 max-w-xl text-lg leading-relaxed text-muted">
+          Club nocturno de lujo en el Poblenou. Hormigón, cristal y grafiti bajo un sistema
+          Funktion&#8209;One. Tres salas, una sola noche, hasta que salga el sol.
+        </p>
+
+        <div data-reveal class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="#reserva" class="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5">
+            Reservar mesa
+            <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
+          </a>
+          <a href="#agenda" class="glass inline-flex items-center justify-center rounded-full px-8 py-4 text-sm font-semibold transition-colors duration-200 hover:bg-white/10">
+            Ver agenda
+          </a>
+        </div>
+
+        <!-- Glass stat bar -->
+        <dl data-reveal class="glass glass-sheen mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-glass sm:grid-cols-4">
+          <div class="p-5">
+            <dt class="text-[11px] uppercase tracking-[0.22em] text-muted">Salas</dt>
+            <dd class="mt-1.5 font-display text-3xl font-bold">03</dd>
+          </div>
+          <div class="border-l border-white/10 p-5">
+            <dt class="text-[11px] uppercase tracking-[0.22em] text-muted">Horario</dt>
+            <dd class="mt-1.5 font-display text-3xl font-bold">00 &ndash; 06</dd>
+          </div>
+          <div class="border-white/10 p-5 sm:border-l">
+            <dt class="text-[11px] uppercase tracking-[0.22em] text-muted">Artistas / año</dt>
+            <dd class="mt-1.5 font-display text-3xl font-bold">+40</dd>
+          </div>
+          <div class="border-l border-white/10 p-5">
+            <dt class="text-[11px] uppercase tracking-[0.22em] text-muted">Aforo</dt>
+            <dd class="mt-1.5 font-display text-3xl font-bold">900</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="relative border-y border-white/10 bg-white/[0.03] py-4" aria-hidden="true">
+      <div class="fade-edges overflow-hidden">
+        <div class="marquee gap-10 whitespace-nowrap">
+          <span class="flex items-center gap-10 font-spray text-2xl uppercase tracking-wide text-white/70 sm:text-3xl">
+            <span>Techno</span><span>&bull;</span><span>House</span><span>&bull;</span><span>Mesas VIP</span><span>&bull;</span><span>Sesiones hasta las 6</span><span>&bull;</span><span>La Nit</span><span>&bull;</span>
+          </span>
+          <span class="flex items-center gap-10 font-spray text-2xl uppercase tracking-wide text-white/70 sm:text-3xl">
+            <span>Techno</span><span>&bull;</span><span>House</span><span>&bull;</span><span>Mesas VIP</span><span>&bull;</span><span>Sesiones hasta las 6</span><span>&bull;</span><span>La Nit</span><span>&bull;</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ EXPERIENCIA ============ -->
+    <section id="experiencia" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-14 lg:grid-cols-[1.15fr,0.85fr] lg:items-center">
+          <div>
+            <p data-reveal class="text-[11px] uppercase tracking-[0.32em] text-muted">La experiencia</p>
+            <h2 data-reveal class="mt-4 font-display text-4xl font-bold leading-[1.05] sm:text-5xl">
+              Lujo en blanco y negro,<br>
+              <span class="italic text-silver">ruido en las paredes</span>
+            </h2>
+            <p data-reveal class="mt-6 max-w-lg text-base leading-relaxed text-muted">
+              Una nave industrial de 1.400&nbsp;m&sup2; reconvertida: murales de grafiti originales,
+              vidrio esmerilado, acero pulido y una iluminación pensada para que todo el mundo
+              se vea bien a las cuatro de la mañana.
+            </p>
+
+            <div class="mt-10 scene grid gap-4 sm:grid-cols-3">
+              <article data-reveal data-tilt class="glass tilt rounded-glass p-6">
+                <div class="tilt-layer">
+                  <span class="grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 text-xl" aria-hidden="true">&#9835;</span>
+                  <h3 class="mt-5 font-display text-xl font-bold">Funktion&#8209;One</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-muted">Sistema calibrado sala a sala. Presión sin fatiga auditiva.</p>
+                </div>
+              </article>
+              <article data-reveal data-tilt class="glass tilt rounded-glass p-6">
+                <div class="tilt-layer">
+                  <span class="grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 text-xl" aria-hidden="true">&#9826;</span>
+                  <h3 class="mt-5 font-display text-xl font-bold">Coctelería</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-muted">Carta de autor, hielo tallado y servicio en mesa toda la noche.</p>
+                </div>
+              </article>
+              <article data-reveal data-tilt class="glass tilt rounded-glass p-6">
+                <div class="tilt-layer">
+                  <span class="grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 text-xl" aria-hidden="true">&#9670;</span>
+                  <h3 class="mt-5 font-display text-xl font-bold">Tres salas</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-muted">Main, Sótano y Terraza. Tres tempos para la misma noche.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Rotating 3D glass cube -->
+          <div data-reveal class="cube-scene flex items-center justify-center py-10">
+            <div class="cube">
+              <div class="cube-face cube-face--front"><span class="font-display text-4xl font-black tracking-[0.18em]">NIT</span></div>
+              <div class="cube-face cube-face--back"><span class="font-spray text-3xl">LA NIT</span></div>
+              <div class="cube-face cube-face--right stencil"><span class="font-tag text-2xl -rotate-6">bcn</span></div>
+              <div class="cube-face cube-face--left"><span class="font-display text-5xl font-black">N</span></div>
+              <div class="cube-face cube-face--top"><span class="text-[10px] uppercase tracking-[0.4em] text-muted">00&ndash;06</span></div>
+              <div class="cube-face cube-face--bottom"><span class="text-[10px] uppercase tracking-[0.4em] text-muted">Poblenou</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AGENDA ============ -->
+    <section id="agenda" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-6xl">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p data-reveal class="text-[11px] uppercase tracking-[0.32em] text-muted">Próximas noches</p>
+            <h2 data-reveal class="mt-4 font-display text-4xl font-bold sm:text-5xl">Agenda</h2>
+          </div>
+          <p data-reveal class="max-w-sm text-sm leading-relaxed text-muted">
+            Puertas a las 00:00. Lista reducida hasta la 01:30. Las mesas incluyen acceso directo sin cola.
+          </p>
+        </div>
+
+        <div class="mt-12 scene grid gap-4">
+          <article data-reveal data-tilt class="glass tilt glass-sheen grid gap-5 rounded-glass p-6 sm:grid-cols-[110px,1fr,auto] sm:items-center">
+            <div class="tilt-layer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-center">
+              <p class="font-display text-3xl font-black leading-none">12</p>
+              <p class="mt-1 text-[11px] uppercase tracking-[0.24em] text-muted">Sep</p>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-bold">Nocturn &mdash; AMELIE LENS b2b RØDHÅD</h3>
+              <p class="mt-1.5 text-sm text-muted">Sala Main &middot; Techno &middot; 00:00 &ndash; 06:00</p>
+            </div>
+            <a href="#reserva" class="rounded-full bg-white px-6 py-3 text-center text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5">Entradas</a>
+          </article>
+
+          <article data-reveal data-tilt class="glass tilt grid gap-5 rounded-glass p-6 sm:grid-cols-[110px,1fr,auto] sm:items-center">
+            <div class="tilt-layer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-center">
+              <p class="font-display text-3xl font-black leading-none">19</p>
+              <p class="mt-1 text-[11px] uppercase tracking-[0.24em] text-muted">Sep</p>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-bold">Blanc &mdash; HONEY DIJON</h3>
+              <p class="mt-1.5 text-sm text-muted">Sala Main &middot; House &middot; Dress code blanco</p>
+            </div>
+            <a href="#reserva" class="glass rounded-full px-6 py-3 text-center text-sm font-semibold transition-colors hover:bg-white/10">Entradas</a>
+          </article>
+
+          <article data-reveal data-tilt class="glass tilt grid gap-5 rounded-glass p-6 sm:grid-cols-[110px,1fr,auto] sm:items-center">
+            <div class="tilt-layer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-center">
+              <p class="font-display text-3xl font-black leading-none">26</p>
+              <p class="mt-1 text-[11px] uppercase tracking-[0.24em] text-muted">Sep</p>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-bold">Aerosol &mdash; live graffiti + KI/KI</h3>
+              <p class="mt-1.5 text-sm text-muted">Sótano &middot; Mural en directo &middot; Aforo limitado</p>
+            </div>
+            <a href="#reserva" class="glass rounded-full px-6 py-3 text-center text-sm font-semibold transition-colors hover:bg-white/10">Entradas</a>
+          </article>
+
+          <article data-reveal data-tilt class="glass tilt grid gap-5 rounded-glass p-6 sm:grid-cols-[110px,1fr,auto] sm:items-center">
+            <div class="tilt-layer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-center">
+              <p class="font-display text-3xl font-black leading-none">03</p>
+              <p class="mt-1 text-[11px] uppercase tracking-[0.24em] text-muted">Oct</p>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-bold">Terraza Sunrise &mdash; DJ HARVEY</h3>
+              <p class="mt-1.5 text-sm text-muted">Terraza &middot; Disco / Balearic &middot; Cierre a las 07:00</p>
+            </div>
+            <a href="#reserva" class="glass rounded-full px-6 py-3 text-center text-sm font-semibold transition-colors hover:bg-white/10">Entradas</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ESPACIOS ============ -->
+    <section id="espacios" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-6xl">
+        <div class="max-w-2xl">
+          <p data-reveal class="text-[11px] uppercase tracking-[0.32em] text-muted">Espacios</p>
+          <h2 data-reveal class="mt-4 font-display text-4xl font-bold sm:text-5xl">Elige tu noche</h2>
+          <p data-reveal class="mt-5 text-base leading-relaxed text-muted">
+            Todas las opciones incluyen guardarropa. Las mesas se confirman con depósito y
+            se liberan a la 01:00 si no hay check&#8209;in.
+          </p>
+        </div>
+
+        <div class="mt-14 scene grid gap-5 lg:grid-cols-3">
+          <article data-reveal data-tilt class="glass tilt flex flex-col rounded-glass p-7">
+            <div class="tilt-layer flex h-full flex-col">
+              <h3 class="font-display text-2xl font-bold">Entrada general</h3>
+              <p class="mt-2 text-sm text-muted">Acceso a las tres salas.</p>
+              <p class="mt-6 font-display text-5xl font-black">20&euro;</p>
+              <ul class="mt-7 grid gap-3 text-sm text-silver">
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Consumición incluida</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Guardarropa</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Acceso hasta las 03:00</li>
+              </ul>
+              <a href="#reserva" class="glass mt-8 rounded-full px-6 py-3.5 text-center text-sm font-semibold transition-colors hover:bg-white/10">Comprar</a>
+            </div>
+          </article>
+
+          <article data-reveal data-tilt class="glass glass-strong glass-sheen tilt relative flex flex-col rounded-glass p-7 ring-1 ring-white/25">
+            <span class="absolute -top-3 left-7 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-black">Más reservada</span>
+            <div class="tilt-layer flex h-full flex-col">
+              <h3 class="font-display text-2xl font-bold">Mesa VIP</h3>
+              <p class="mt-2 text-sm text-muted">Hasta 6 personas, planta principal.</p>
+              <p class="mt-6 font-display text-5xl font-black">350&euro;</p>
+              <ul class="mt-7 grid gap-3 text-sm text-silver">
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Acceso sin cola para 6</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> 2 botellas premium</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Servicio de mesa dedicado</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Vista a cabina</li>
+              </ul>
+              <a href="#reserva" class="mt-8 rounded-full bg-white px-6 py-3.5 text-center text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5">Reservar mesa</a>
+            </div>
+          </article>
+
+          <article data-reveal data-tilt class="glass tilt flex flex-col rounded-glass p-7">
+            <div class="tilt-layer flex h-full flex-col">
+              <h3 class="font-display text-2xl font-bold">Reservado privado</h3>
+              <p class="mt-2 text-sm text-muted">Sala Cristal, hasta 14 personas.</p>
+              <p class="mt-6 font-display text-5xl font-black">900&euro;</p>
+              <ul class="mt-7 grid gap-3 text-sm text-silver">
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Entrada privada</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> 5 botellas + coctelería</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Anfitrión y seguridad propia</li>
+                <li class="flex gap-3"><span aria-hidden="true">&#8212;</span> Mural personalizado</li>
+              </ul>
+              <a href="#reserva" class="glass mt-8 rounded-full px-6 py-3.5 text-center text-sm font-semibold transition-colors hover:bg-white/10">Consultar</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GALERÍA ============ -->
+    <section id="galeria" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-6xl">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p data-reveal class="text-[11px] uppercase tracking-[0.32em] text-muted">Galería</p>
+            <h2 data-reveal class="mt-4 font-display text-4xl font-bold sm:text-5xl">Paredes que hablan</h2>
+          </div>
+          <p data-reveal class="max-w-sm text-sm leading-relaxed text-muted">
+            Cada trimestre invitamos a un artista a repintar el sótano. El mural anterior
+            no se fotografía: se tapa.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <figure data-reveal data-parallax class="glass group relative aspect-[4/5] overflow-hidden rounded-glass">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.22),transparent_55%)]"></div>
+            <span aria-hidden="true" class="absolute inset-0 grid place-items-center font-spray text-5xl text-white/20 transition-transform duration-500 group-hover:scale-110">NIT</span>
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 text-sm">Sala Main &middot; 03:40</figcaption>
+          </figure>
+
+          <figure data-reveal data-parallax class="glass stencil group relative aspect-[4/5] overflow-hidden rounded-glass sm:aspect-auto sm:row-span-2">
+            <div class="absolute inset-0 bg-[linear-gradient(160deg,rgba(255,255,255,0.16),transparent_60%)]"></div>
+            <span aria-hidden="true" class="absolute inset-0 grid place-items-center px-6 text-center font-tag text-3xl leading-tight text-white/75 transition-transform duration-500 group-hover:scale-105">no photos<br>after 4am</span>
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 text-sm">Sótano &middot; Mural en directo</figcaption>
+          </figure>
+
+          <figure data-reveal data-parallax class="glass group relative aspect-[4/5] overflow-hidden rounded-glass">
+            <div class="absolute inset-0 bg-[conic-gradient(from_180deg_at_60%_40%,rgba(255,255,255,0.20),transparent_45%,rgba(255,255,255,0.12))]"></div>
+            <span aria-hidden="true" class="absolute inset-0 grid place-items-center font-display text-6xl font-black text-white/15 transition-transform duration-500 group-hover:scale-110">06</span>
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 text-sm">Terraza &middot; Amanecer</figcaption>
+          </figure>
+
+          <figure data-reveal data-parallax class="glass group relative aspect-[4/5] overflow-hidden rounded-glass">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(255,255,255,0.18),transparent_55%)]"></div>
+            <span aria-hidden="true" class="absolute inset-0 grid place-items-center font-spray text-4xl text-white/20 transition-transform duration-500 group-hover:scale-110">CRISTAL</span>
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 text-sm">Reservado &middot; Sala Cristal</figcaption>
+          </figure>
+
+          <figure data-reveal data-parallax class="glass group relative aspect-[4/5] overflow-hidden rounded-glass">
+            <div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.05),rgba(255,255,255,0.22))]"></div>
+            <span aria-hidden="true" class="absolute inset-0 grid place-items-center font-tag text-4xl -rotate-6 text-white/60 transition-transform duration-500 group-hover:rotate-0">la nit</span>
+            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-5 text-sm">Entrada &middot; C/ Pujades</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-3xl">
+        <p data-reveal class="text-[11px] uppercase tracking-[0.32em] text-muted">Antes de venir</p>
+        <h2 data-reveal class="mt-4 font-display text-4xl font-bold sm:text-5xl">Preguntas frecuentes</h2>
+
+        <div class="mt-10 grid gap-3" data-accordion>
+          <div data-reveal class="glass overflow-hidden rounded-glass">
+            <h3>
+              <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-medium" aria-expanded="false" aria-controls="faq-1">
+                <span>¿Cuál es el dress code?</span>
+                <span aria-hidden="true" class="text-xl leading-none transition-transform duration-300">+</span>
+              </button>
+            </h3>
+            <div id="faq-1" hidden class="px-6 pb-6 text-sm leading-relaxed text-muted">
+              Elegante y en blanco o negro. Sin ropa deportiva ni chanclas. En las noches
+              <em>Blanc</em> el blanco es obligatorio.
+            </div>
+          </div>
+
+          <div data-reveal class="glass overflow-hidden rounded-glass">
+            <h3>
+              <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-medium" aria-expanded="false" aria-controls="faq-2">
+                <span>¿Hasta cuándo puedo reservar mesa?</span>
+                <span aria-hidden="true" class="text-xl leading-none transition-transform duration-300">+</span>
+              </button>
+            </h3>
+            <div id="faq-2" hidden class="px-6 pb-6 text-sm leading-relaxed text-muted">
+              Hasta las 20:00 del mismo día por la web. Después, solo por teléfono y
+              sujeto a disponibilidad.
+            </div>
+          </div>
+
+          <div data-reveal class="glass overflow-hidden rounded-glass">
+            <h3>
+              <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-medium" aria-expanded="false" aria-controls="faq-3">
+                <span>¿Se pueden hacer fotos dentro?</span>
+                <span aria-hidden="true" class="text-xl leading-none transition-transform duration-300">+</span>
+              </button>
+            </h3>
+            <div id="faq-3" hidden class="px-6 pb-6 text-sm leading-relaxed text-muted">
+              Sí, hasta las 04:00. A partir de esa hora cubrimos las cámaras: la pista es
+              un espacio privado para quien está dentro.
+            </div>
+          </div>
+
+          <div data-reveal class="glass overflow-hidden rounded-glass">
+            <h3>
+              <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-medium" aria-expanded="false" aria-controls="faq-4">
+                <span>¿Edad mínima?</span>
+                <span aria-hidden="true" class="text-xl leading-none transition-transform duration-300">+</span>
+              </button>
+            </h3>
+            <div id="faq-4" hidden class="px-6 pb-6 text-sm leading-relaxed text-muted">
+              21 años con documento original. No se aceptan fotocopias ni fotos del DNI.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESERVA ============ -->
+    <section id="reserva" class="relative px-4 py-24 sm:px-6 sm:py-32">
+      <div class="mx-auto max-w-4xl">
+        <div data-reveal class="glass glass-sheen relative overflow-hidden rounded-glass p-8 sm:p-12">
+          <span aria-hidden="true" class="pointer-events-none absolute -right-6 -top-8 select-none font-spray text-[7rem] leading-none text-white/[0.06] sm:text-[10rem]">RSVP</span>
+
+          <p class="text-[11px] uppercase tracking-[0.32em] text-muted">Reservas</p>
+          <h2 class="mt-4 font-display text-4xl font-bold sm:text-5xl">Tu mesa te espera</h2>
+          <p class="mt-4 max-w-lg text-sm leading-relaxed text-muted">
+            Te confirmamos por email en menos de 2 horas. Sin depósito no hay reserva en firme.
+          </p>
+
+          <form id="booking-form" class="mt-9 grid gap-4 sm:grid-cols-2" novalidate>
+            <div class="sm:col-span-1">
+              <label for="f-nombre" class="mb-2 block text-xs uppercase tracking-[0.18em] text-muted">Nombre</label>
+              <input id="f-nombre" name="nombre" type="text" required autocomplete="name"
+                class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/35 focus:border-white/50 focus:outline-none"
+                placeholder="Nombre y apellido">
+            </div>
+            <div class="sm:col-span-1">
+              <label for="f-email" class="mb-2 block text-xs uppercase tracking-[0.18em] text-muted">Email</label>
+              <input id="f-email" name="email" type="email" required autocomplete="email"
+                class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-sm text-white placeholder:text-white/35 focus:border-white/50 focus:outline-none"
+                placeholder="tu@email.com">
+            </div>
+            <div>
+              <label for="f-fecha" class="mb-2 block text-xs uppercase tracking-[0.18em] text-muted">Fecha</label>
+              <input id="f-fecha" name="fecha" type="date" required
+                class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-sm text-white focus:border-white/50 focus:outline-none">
+            </div>
+            <div>
+              <label for="f-espacio" class="mb-2 block text-xs uppercase tracking-[0.18em] text-muted">Espacio</label>
+              <select id="f-espacio" name="espacio"
+                class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-sm text-white focus:border-white/50 focus:outline-none">
+                <option class="bg-graphite">Entrada general</option>
+                <option class="bg-graphite" selected>Mesa VIP (hasta 6)</option>
+                <option class="bg-graphite">Reservado privado (hasta 14)</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <p class="text-xs text-muted">Al enviar aceptas la política de acceso y el dress code.</p>
+              <button type="submit" class="rounded-full bg-white px-8 py-4 text-sm font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5">
+                Enviar solicitud
+              </button>
+            </div>
+          </form>
+
+          <p id="booking-status" role="status" aria-live="polite" class="mt-5 text-sm text-silver"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="relative border-t border-white/10 px-4 py-16 sm:px-6">
+    <div class="mx-auto max-w-6xl">
+      <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="lg:col-span-2">
+          <p class="font-display text-3xl font-black tracking-[0.16em]">LA NIT</p>
+          <p class="mt-4 max-w-xs text-sm leading-relaxed text-muted">
+            Club nocturno de lujo en Barcelona. Blanco, negro y todo lo que pasa entre medias.
+          </p>
+        </div>
+        <div>
+          <h2 class="text-[11px] uppercase tracking-[0.24em] text-muted">Dónde</h2>
+          <address class="mt-4 not-italic text-sm leading-relaxed text-silver">
+            C/ Pujades 188<br>
+            08005 Poblenou, Barcelona
+          </address>
+        </div>
+        <div>
+          <h2 class="text-[11px] uppercase tracking-[0.24em] text-muted">Horario</h2>
+          <p class="mt-4 text-sm leading-relaxed text-silver">
+            Jueves &ndash; Sábado<br>
+            00:00 &ndash; 06:00
+          </p>
+          <ul class="mt-5 flex gap-4 text-sm">
+            <li><a href="#" class="text-muted transition-colors hover:text-white">Instagram</a></li>
+            <li><a href="#" class="text-muted transition-colors hover:text-white">Resident Advisor</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hairline my-10"></div>
+
+      <div class="flex flex-col gap-3 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p>&copy; 2026 La Nit. Todos los derechos reservados.</p>
+        <p class="font-tag text-base text-white/40">hasta que salga el sol</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------------------------------------------------------------
+     * 1. Animated 3D background (hand-rolled projection, no 3D lib)
+     *    - depth-sorted particle field
+     *    - rotating wireframe monolith
+     * --------------------------------------------------------------- */
+    (function background() {
+      var canvas = document.getElementById('bg-canvas');
+      if (!canvas || !canvas.getContext) return;
+      var ctx = canvas.getContext('2d');
+
+      var w = 0, h = 0, dpr = 1;
+      var PARTICLES = window.innerWidth < 768 ? 90 : 190;
+      var points = [];
+      var focal = 620;
+      var rot = 0;
+      var rafId = null;
+
+      function rand(min, max) { return min + Math.random() * (max - min); }
+
+      for (var i = 0; i < PARTICLES; i++) {
+        points.push({
+          x: rand(-900, 900),
+          y: rand(-500, 500),
+          z: rand(120, 1500),
+          r: rand(0.6, 2.0),
+          drift: rand(0.1, 0.55)
+        });
+      }
+
+      // Wireframe monolith: a tall rectangular prism, 8 vertices + 12 edges.
+      var BW = 130, BH = 260, BD = 130;
+      var verts = [
+        [-BW, -BH, -BD], [BW, -BH, -BD], [BW, BH, -BD], [-BW, BH, -BD],
+        [-BW, -BH,  BD], [BW, -BH,  BD], [BW, BH,  BD], [-BW, BH,  BD]
+      ];
+      var edges = [
+        [0,1],[1,2],[2,3],[3,0],
+        [4,5],[5,6],[6,7],[7,4],
+        [0,4],[1,5],[2,6],[3,7]
+      ];
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = canvas.clientWidth;
+        h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function project(x, y, z) {
+        var s = focal / (focal + z);
+        return { x: w / 2 + x * s, y: h / 2 + y * s, s: s };
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        // --- particle field (further points drawn dimmer & smaller) ---
+        points.sort(function (a, b) { return b.z - a.z; });
+        for (var i = 0; i < points.length; i++) {
+          var p = points[i];
+          var cos = Math.cos(rot * 0.35), sin = Math.sin(rot * 0.35);
+          var rx = p.x * cos - p.z * sin;
+          var rz = p.x * sin + p.z * cos;
+          if (rz < 40) rz += 1600;
+          var pr = project(rx, p.y, rz);
+          var alpha = Math.max(0, Math.min(0.85, (1 - rz / 1700) * 0.8));
+          ctx.beginPath();
+          ctx.arc(pr.x, pr.y, Math.max(0.3, p.r * pr.s), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,' + alpha.toFixed(3) + ')';
+          ctx.fill();
+        }
+
+        // --- wireframe monolith ---
+        var cy = Math.cos(rot), sy = Math.sin(rot);
+        var cx = Math.cos(rot * 0.42), sx = Math.sin(rot * 0.42);
+        var projected = [];
+        for (var v = 0; v < verts.length; v++) {
+          var x0 = verts[v][0], y0 = verts[v][1], z0 = verts[v][2];
+          // rotate Y then X
+          var x1 = x0 * cy - z0 * sy;
+          var z1 = x0 * sy + z0 * cy;
+          var y1 = y0 * cx - z1 * sx;
+          var z2 = y0 * sx + z1 * cx;
+          projected.push(project(x1, y1, z2 + 700));
+        }
+        ctx.lineWidth = 1;
+        for (var e = 0; e < edges.length; e++) {
+          var a = projected[edges[e][0]], b = projected[edges[e][1]];
+          var depth = (a.s + b.s) / 2;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = 'rgba(255,255,255,' + (depth * 0.34).toFixed(3) + ')';
+          ctx.stroke();
+        }
+        // vertex nodes
+        for (var n = 0; n < projected.length; n++) {
+          ctx.beginPath();
+          ctx.arc(projected[n].x, projected[n].y, 2.2 * projected[n].s, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.75)';
+          ctx.fill();
+        }
+      }
+
+      function tick() {
+        rot += 0.0016;
+        for (var i = 0; i < points.length; i++) {
+          points[i].z -= points[i].drift;
+          if (points[i].z < 100) {
+            points[i].z = 1500;
+            points[i].x = rand(-900, 900);
+            points[i].y = rand(-500, 500);
+          }
+        }
+        draw();
+        rafId = window.requestAnimationFrame(tick);
+      }
+
+      function start() {
+        if (rafId === null && !reduceMotion) rafId = window.requestAnimationFrame(tick);
+      }
+      function stop() {
+        if (rafId !== null) { window.cancelAnimationFrame(rafId); rafId = null; }
+      }
+
+      resize();
+      draw();
+      if (reduceMotion) {
+        // Static frame only: no continuous motion.
+      } else {
+        start();
+      }
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () { resize(); draw(); }, 150);
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { stop(); } else { start(); }
+      });
+    }());
+
+    /* ---------------------------------------------------------------
+     * 2. 3D tilt on glass cards (pointer only, skipped on touch)
+     * --------------------------------------------------------------- */
+    if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      var tilts = document.querySelectorAll('[data-tilt]');
+      Array.prototype.forEach.call(tilts, function (card) {
+        card.addEventListener('mousemove', function (ev) {
+          var rect = card.getBoundingClientRect();
+          var px = (ev.clientX - rect.left) / rect.width - 0.5;
+          var py = (ev.clientY - rect.top) / rect.height - 0.5;
+          card.style.setProperty('--ry', (px * 9).toFixed(2) + 'deg');
+          card.style.setProperty('--rx', (-py * 9).toFixed(2) + 'deg');
+        });
+        card.addEventListener('mouseleave', function () {
+          card.style.setProperty('--ry', '0deg');
+          card.style.setProperty('--rx', '0deg');
+        });
+      });
+    }
+
+    /* ---------------------------------------------------------------
+     * 3. Mobile navigation
+     * --------------------------------------------------------------- */
+    (function nav() {
+      var toggle = document.getElementById('nav-toggle');
+      var menu = document.getElementById('mobile-menu');
+      if (!toggle || !menu) return;
+
+      function setOpen(open) {
+        menu.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      }
+      toggle.addEventListener('click', function () {
+        setOpen(menu.hidden);
+      });
+      menu.addEventListener('click', function (ev) {
+        if (ev.target.tagName === 'A') setOpen(false);
+      });
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !menu.hidden) { setOpen(false); toggle.focus(); }
+      });
+    }());
+
+    /* ---------------------------------------------------------------
+     * 4. FAQ accordion
+     * --------------------------------------------------------------- */
+    (function accordion() {
+      var root = document.querySelector('[data-accordion]');
+      if (!root) return;
+      var buttons = root.querySelectorAll('button[aria-controls]');
+      Array.prototype.forEach.call(buttons, function (btn) {
+        btn.addEventListener('click', function () {
+          var panel = document.getElementById(btn.getAttribute('aria-controls'));
+          var open = btn.getAttribute('aria-expanded') === 'true';
+          // Close siblings for a single-open accordion.
+          Array.prototype.forEach.call(buttons, function (other) {
+            if (other === btn) return;
+            other.setAttribute('aria-expanded', 'false');
+            other.lastElementChild.style.transform = 'rotate(0deg)';
+            document.getElementById(other.getAttribute('aria-controls')).hidden = true;
+          });
+          btn.setAttribute('aria-expanded', String(!open));
+          btn.lastElementChild.style.transform = open ? 'rotate(0deg)' : 'rotate(45deg)';
+          if (panel) panel.hidden = open;
+        });
+      });
+    }());
+
+    /* ---------------------------------------------------------------
+     * 5. Booking form (front-end only demo)
+     * --------------------------------------------------------------- */
+    (function booking() {
+      var form = document.getElementById('booking-form');
+      var status = document.getElementById('booking-status');
+      if (!form || !status) return;
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var nombre = form.elements.nombre.value.trim();
+        var email = form.elements.email.value.trim();
+        var fecha = form.elements.fecha.value;
+        if (!nombre || !email || !fecha) {
+          status.textContent = 'Completa nombre, email y fecha para enviar la solicitud.';
+          return;
+        }
+        status.textContent = 'Gracias, ' + nombre + '. Solicitud recibida para el ' + fecha +
+          ' — te confirmamos por email en menos de 2 horas.';
+        form.reset();
+      });
+    }());
+
+    /* ---------------------------------------------------------------
+     * 6. Scroll reveal + parallax (GSAP, degrades gracefully)
+     * --------------------------------------------------------------- */
+    if (window.gsap && window.ScrollTrigger && !reduceMotion) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+        gsap.from(el, {
+          opacity: 0,
+          y: 14,
+          duration: 0.5,
+          ease: 'power1.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' }
+        });
+      });
+
+      gsap.utils.toArray('[data-parallax]').forEach(function (el, i) {
+        gsap.to(el, {
+          yPercent: (i % 2 === 0 ? -6 : -10),
+          ease: 'none',
+          scrollTrigger: { trigger: el, scrub: 0.5 }
+        });
+      });
+    }
+  }());
+  </script>
+</body>
+</html>
