@@ -108,21 +108,55 @@ function initForm(){
     });
   });
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fields = Array.from(form.querySelectorAll('input[name], textarea[name]'));
-    const invalid = fields.filter((field) => !validateField(field));
+  const consent = form.querySelector('#consentimiento');
 
-    if (invalid.length){
+  function validateConsent(){
+    const wrap = consent.closest('.field');
+    const ok = consent.checked;
+    wrap.classList.toggle('is-invalid', !ok);
+    wrap.querySelector('.error').textContent = ok ? '' : 'Necesitamos tu permiso para responderte.';
+    return ok;
+  }
+  consent.addEventListener('change', () => {
+    if (consent.closest('.field').classList.contains('is-invalid')) validateConsent();
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fields = Array.from(form.querySelectorAll('input[name], textarea[name]'))
+      .filter((field) => rules[field.name]);
+    const invalid = fields.filter((field) => !validateField(field));
+    const consentOk = validateConsent();
+
+    if (invalid.length || !consentOk){
       status.textContent = 'Faltan datos por revisar.';
-      invalid[0].focus();
+      (invalid[0] || consent).focus();
       return;
     }
 
-    // Demo build: no backend wired up. Point this at your form endpoint
-    // (Formspree, Resend, a Worker…) before going live.
-    status.textContent = 'Gracias — te escribimos en menos de 24 h laborables. (Demo: el envío no está conectado todavía.)';
-    form.reset();
+    const boton = form.querySelector('button[type="submit"]');
+    boton.disabled = true;
+    status.textContent = 'Enviando…';
+
+    // Netlify recoge el formulario en la propia URL del sitio; enviarlo por
+    // fetch evita el salto de página y deja el mensaje aquí mismo.
+    try {
+      const respuesta = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString(),
+      });
+      if (!respuesta.ok) throw new Error(`El servidor respondió ${respuesta.status}`);
+      status.innerHTML = 'Recibido. Te escribimos en menos de 24 h laborables.';
+      form.reset();
+    } catch (err){
+      console.warn('[de-la-isla] el envío del formulario falló:', err);
+      status.innerHTML = 'No hemos podido enviarlo. Escríbenos por ' +
+        '<a href="https://wa.me/34622411144?text=Hola+quiero+el+diagnostico+gratis" target="_blank" rel="noopener">WhatsApp</a> ' +
+        'y lo vemos igual.';
+    } finally {
+      boton.disabled = false;
+    }
   });
 }
 

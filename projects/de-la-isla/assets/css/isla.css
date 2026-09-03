@@ -438,6 +438,20 @@ input[type="range"]::-moz-range-thumb{
 .contact-side dd{ margin:4px 0 0; font-size:16px; }
 .contact-side a{ color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(216,166,87,.4); }
 
+/* ---------- Casilla de consentimiento (RGPD) ---------- */
+.field--consent{ gap:6px; }
+.field .consent{
+  display:flex; gap:12px; align-items:flex-start; cursor:pointer;
+  font-size:14.5px; color:var(--sand-dim); text-transform:none; letter-spacing:0;
+  font-family:var(--font-body);
+}
+.field .consent input{
+  width:20px; height:20px; margin-top:1px; flex:none; accent-color:var(--gold);
+}
+.field .consent a{ color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(216,166,87,.4); }
+.field--consent.is-invalid .consent{ color:#F0A08A; }
+.contact-side .btn{ justify-self:start; }
+
 /* ---------- Footer ---------- */
 .site-footer{ border-top:1px solid var(--line); padding:var(--s-8) 0 var(--s-6); background:var(--sea-800); }
 .footer-grid{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:var(--s-7); }

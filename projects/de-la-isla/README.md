@@ -9,8 +9,9 @@ ejecución (salvo la hoja de Google Fonts). Todo lo demás —el motor 3D, las
 animaciones y los sliders— va servido desde el propio proyecto.
 
 ```
-python3 -m http.server 8000     # o cualquier servidor estático
-# http://localhost:8000/
+python3 -m http.server 8000       # ver la web en local
+node scripts/build-site.mjs       # preparar dist/site/ para el hosting
+node scripts/bundle.mjs           # archivo único dist/de-la-isla.html
 ```
 
 > Hace falta un servidor: `index.html` carga módulos ES y el navegador los
@@ -73,6 +74,35 @@ ser sendas IIFE que devuelven sus exports (comparten nombres internos como
 del proyecto. El resultado se abre con doble clic y se puede enviar por correo o
 publicar en cualquier sitio que bloquee scripts externos.
 
+## Publicar
+
+`node scripts/build-site.mjs` deja en `dist/site/` exactamente lo que se sube y
+nada más: las cuatro páginas, `assets/`, `robots.txt`, `sitemap.xml` y
+`netlify.toml`. Por el camino empaqueta y minifica el JavaScript con esbuild
+(2,1 MB de módulos sueltos → 550 kB, unos 140 kB por la red), así que la carpeta
+pesa **~1 MB**. Se arrastra a [app.netlify.com/drop](https://app.netlify.com/drop)
+o se conecta por Git.
+
+El formulario usa **Netlify Forms**: se detecta solo al desplegar porque el HTML
+lleva `data-netlify="true"` y el campo oculto `form-name`. Los envíos aparecen en
+el panel de Netlify, en Forms → *contacto*. Se envía por `fetch`, así que si algo
+falla el visitante ve un aviso con el enlace de WhatsApp en vez de perder el
+mensaje.
+
+Las tipografías se sirven desde `assets/fonts/` (subconjunto latino de Google
+Fonts). Sin peticiones a Google: una carga menos y ningún dato del visitante
+viaja a un tercero, que es lo que permite no poner banner de cookies.
+
+### Antes de publicar
+
+1. **Dominio**: `delaisla.es` aparece en `canonical`, `og:url`, `sitemap.xml` y
+   `robots.txt`. Si el dominio es otro, cámbialo en esos cuatro sitios.
+2. **Aviso legal y privacidad**: llevan `[NOMBRE Y APELLIDOS]`, `[NIF]`,
+   `[DIRECCIÓN FISCAL]` y `[CORREO DE CONTACTO]` sin rellenar. La LSSI obliga a
+   identificar al titular, así que no se publica sin eso.
+3. **Analítica**: si añades una, que sea sin cookies (Plausible, Umami o la de
+   Cloudflare). Con Google Analytics harían falta banner y política de cookies.
+
 ## Accesibilidad
 
 - `prefers-reduced-motion` desactiva transiciones, animaciones, autoplay del
@@ -85,12 +115,11 @@ publicar en cualquier sitio que bloquee scripts externos.
 - Si WebGL falla, el `<canvas>` conserva el degradado CSS de respaldo y el resto
   de la página funciona igual.
 
-## Antes de publicarla de verdad
+## Qué se quitó al preparar el lanzamiento
 
-Los datos son de ejemplo y hay que cambiarlos:
-
-1. Negocios, cifras y testimonios son ficticios (así se indica en el pie).
-2. Dirección, `hola@delaisla.example` y `+34 971 00 00 00` son marcadores.
-3. El formulario no envía nada: `initForm` en `assets/js/main.js` sólo valida y
-   muestra un mensaje. Conéctalo a tu endpoint (Formspree, Resend, un Worker…).
-4. Añade una imagen `og:image` propia y sustituye el favicon SVG en línea.
+La primera versión llevaba contenido de demostración que no podía publicarse:
+cinco casos de clientes inventados, tres testimonios firmados con nombre y
+apellido, un antes/después atribuido a un restaurante concreto y un contador de
+«38 negocios · 4,9 de valoración». Todo eso salió de la web — publicar
+resultados y reseñas que no existen es publicidad engañosa. Cuando haya casos
+reales, se vuelven a montar con el mismo diseño (está en el historial de Git).

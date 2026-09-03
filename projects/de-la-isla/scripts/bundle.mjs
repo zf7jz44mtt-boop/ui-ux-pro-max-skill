@@ -77,10 +77,11 @@ const nsObject = (pairs) => `{\n${pairs.map(([e, l]) => `  ${e}: ${l},`).join('\
 const nsDestructure = (pairs, from) =>
   `const {\n${pairs.map(([e, l]) => (e === l ? `  ${e},` : `  ${e}: ${l},`)).join('\n')}\n} = ${from};`;
 
-const [html, animateCss, islaCss, coreSrc, moduleSrc, stagger, sliders, scene, main] = await Promise.all([
+const [html, animateCss, islaCss, fontsCss, coreSrc, moduleSrc, stagger, sliders, scene, main] = await Promise.all([
   read('index.html'),
   read('assets/css/vendor/animate.min.css'),
   read('assets/css/isla.css'),
+  read('assets/css/fonts.css'),
   read('assets/js/vendor/three.core.js'),
   read('assets/js/vendor/three.module.js'),
   read('assets/js/stagger.js'),
@@ -88,6 +89,18 @@ const [html, animateCss, islaCss, coreSrc, moduleSrc, stagger, sliders, scene, m
   read('assets/js/isla-3d.js'),
   read('assets/js/main.js'),
 ]);
+
+// Las tipografías viven en assets/fonts/; aquí viajan dentro del propio HTML.
+const fontsInline = await (async () => {
+  const partes = fontsCss.split(/url\('\.\.\/fonts\/([^']+)'\)/);
+  let salida = '';
+  for (let i = 0; i < partes.length; i++){
+    if (i % 2 === 0){ salida += partes[i]; continue; }
+    const woff2 = await readFile(resolve(root, 'assets/fonts', partes[i]));
+    salida += `url('data:font/woff2;base64,${woff2.toString('base64')}')`;
+  }
+  return salida;
+})();
 
 const core = stripThreeCore(coreSrc);
 const mod = stripThreeModule(moduleSrc);
@@ -123,6 +136,8 @@ if (bundle.includes('</script')) throw new Error('El bundle contiene "</script";
 // Replacer *functions*: the payloads contain `$'` and `$&` sequences (three.js
 // builds regexes out of them), which a string replacement would expand.
 let out = html
+  .replace(/^\s*<link rel="stylesheet" href="assets\/css\/fonts\.css">\s*$/m,
+    () => `<style>\n${fontsInline}\n</style>`)
   .replace(/^\s*<link rel="stylesheet" href="assets\/css\/vendor\/animate\.min\.css">\s*$/m,
     () => `<style>\n/* animate.css 4.1.1 — MIT — https://animate.style */\n${animateCss}\n</style>`)
   .replace(/^\s*<link rel="stylesheet" href="assets\/css\/isla\.css">\s*$/m,
@@ -130,7 +145,7 @@ let out = html
   .replace(/^\s*<script type="module" src="assets\/js\/main\.js"><\/script>\s*$/m,
     () => `<script type="module">\n${bundle}\n</script>`);
 
-for (const marker of ['animate.css 4.1.1', 'de-la-isla modules']){
+for (const marker of ['animate.css 4.1.1', 'de-la-isla modules', "font-family:'Playfair Display'"]){
   if (!out.includes(marker)) throw new Error(`La sustitución falló: falta "${marker}"`);
 }
 
